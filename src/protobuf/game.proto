@@ -16,6 +16,8 @@ message PlayerInfo{
 
     TransformInfo transform = 4;
     StatInfo statInfo = 5;
+    InventoryInfo inventoryInfo = 6;
+    EquipmentInfo equipmentInfo = 7;
 }
 
 message TransformInfo{
@@ -35,6 +37,23 @@ message StatInfo{
     float def = 7;
     float magic = 8;
     float speed = 9; 
+}
+
+message InventoryInfo{
+    repeated ItemInfo = 1;
+}
+
+message ItemInfo{
+    int32 itemId = 1;
+    int32 quantity = 2;
+}
+
+message EquipmentInfo{
+    int32 weapon = 1;
+    int32 head = 2;
+    int32 body = 3;
+    int32 hands = 4;
+    int32 legs = 5
 }
 
 message ScreenText{
@@ -177,21 +196,38 @@ message S_EnterDungeonResponse{
   BattleLog battleLog = 4;
 }
 
-message C_EquipItemRequest
+message C_EquipItemRequest{
+    int32 playerId = 1;
+    EquipmentInfo equipmentInfo = 2;
+    ItemInfo itemInfo = 3;
+}
 
-message S_EquipItemResponse
+message S_EquipItemResponse{
+    EquipmentInfo equipmentInfo = 1;
+    ItemInfo itemInfo = 2;
+}
 
-message C_UnequipItemResponse
+message C_BuyItemRequest{
+    int32 playerId = 1;
+    InventoryInfo inventoryInfo = 2;
+    ItemInfo itemInfo = 3;
+}
 
-message S_UnequipItemResponse
+message S_BuyItemResponse{
+    InventoryInfo inventoryInfo = 1;
+    ItemInfo itemInfo = 2;
+}
 
-message C_BuyItemRequest
+message C_SellItemRequest{
+    int32 playerId = 1;
+    InventoryInfo inventoryInfo = 2;
+    ItemInfo itemInfo = 3;
+}
 
-message S_BuyItemResponse
-
-message C_SellItemRequest
-
-message S_SellItemResponse
+message S_SellItemResponse{
+    InventoryInfo inventoryInfo = 1;
+    ItemInfo itemInfo = 2;
+}
 
 message S_BattleLogNoification{
     BattleLog battleLog = 1;
@@ -220,7 +256,7 @@ message S_MonsterActionNotification{
     ActionSet actionSet = 2;
 }
 
-message C_LeaveDungeonRequest
+message S_LeaveDungeonResponse{
 
-message S_LeaveDungeonResponse
+}
 
