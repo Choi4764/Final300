@@ -1,0 +1,10 @@
+{
+"singleQuote": true,        // 문자열을 작은 따옴표로 감쌉니다.
+"semi": true,               // 명령문 끝에 세미콜론을 추가합니다.
+"useTabs": false,           // 탭 대신 스페이스를 사용합니다.
+"tabWidth": 2,              // 탭의 너비를 2칸으로 설정합니다.
+"trailingComma": "all",     // 객체나 배열의 마지막 요소 뒤에 항상 쉼표를 추가합니다.
+"printWidth": 100,          // 한 줄의 최대 너비를 100자로 설정합니다.
+"arrowParens": "always",    // 화살표 함수의 매개변수에 항상 괄호를 사용합니다.
+"bracketSpacing": true,     // 객체 리터럴의 중괄호 사이에 공백을 추가합니다.
+}
