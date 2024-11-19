@@ -207,6 +207,17 @@ message S_EquipItemResponse{
     ItemInfo itemInfo = 2;
 }
 
+message C_UnequipItemRequest{
+    int32 playerId = 1;
+    EquipmentInfo equipmentInfo = 2;
+    ItemInfo itemInfo = 3;
+}
+
+message S_UnequipItemResponse{
+    EquipmentInfo equipmentInfo = 1;
+    ItemInfo itemInfo = 2;
+}
+
 message C_BuyItemRequest{
     int32 playerId = 1;
     InventoryInfo inventoryInfo = 2;
@@ -244,6 +255,10 @@ message S_SetPlayerMpNotification{
 message S_SetMonsterHpNotification{
     int32 monsterIdx = 1;
     float hp = 2;
+}
+
+message C_PlayerActionRequest{
+    int32 responseCode = 1;
 }
 
 message S_PlayerActionResponse{
