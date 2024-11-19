@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
-import { formatDate } from './formatDate';
+import { formatDate } from './formatDate.js';
+import { config } from 'dotenv';
 
 const createPool = () => {
     const pool = mysql.createPool({
