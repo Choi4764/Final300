@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package game;
 //실패
 enum GlobalFailCode {
     NONE = 0;
@@ -7,26 +8,22 @@ enum GlobalFailCode {
     INVALID_REQUEST = 2;
     AUTHENTICATION_FAILED = 3;
 }
-
 //게임 데이터 명세
 message PlayerInfo{
-    int32 playerId = 1; // 서버 내부관리코드   
+    int32 playerId = 1; // 서버 내부관리코드
     string nickname = 2;
     int32 class = 3;
-
     TransformInfo transform = 4;
     StatInfo statInfo = 5;
     InventoryInfo inventoryInfo = 6;
     EquipmentInfo equipmentInfo = 7;
 }
-
 message TransformInfo{
     float posX = 1; // 기본값 : -9 ~ 9
     float posY = 2; // 기본값 : 1
     float posZ = 3; // 기본값 : -8 ~ 8
     float rot = 4; // 기본값 : 0~360
 }
-
 message StatInfo{
     int32 level = 1;
     float hp = 2;
@@ -36,26 +33,22 @@ message StatInfo{
     float atk = 6;
     float def = 7;
     float magic = 8;
-    float speed = 9; 
+    float speed = 9;
 }
-
 message InventoryInfo{
-    repeated ItemInfo = 1;
+    repeated float ItemInfo = 1;
 }
-
 message ItemInfo{
     int32 itemId = 1;
     int32 quantity = 2;
 }
-
 message EquipmentInfo{
     int32 weapon = 1;
     int32 head = 2;
     int32 body = 3;
     int32 hands = 4;
-    int32 legs = 5
+    int32 legs = 5;
 }
-
 message ScreenText{
     string msg = 1;
     bool typingAnimation = 2;
@@ -63,35 +56,29 @@ message ScreenText{
     optional Color textColor = 4;
     optional Color screenColor = 5;
 }
-
 message ScreenTextAlignment{
     int32 x = 1;
     int32 y = 2;
 }
-
 message Color{
     int32 r = 1;
     int32 g = 2;
     int32 b = 3;
 }
-
 message DungeonInfo{
      int32 dungeonCode = 1;
      repeated MonsterStatus monsters = 2;
 }
-
 message MonsterStatus{
     int32 monsterIdx = 1;
     int32 monsterModel = 2;
     string monsterName = 3;
     float monsterHp = 4;
 }
-
 message ActionSet{
     int32 animCode = 1;
     int32 effectCode = 2;
 }
-
 message PlayerStatus{
     int32 playerClass = 1;
     int32 playerLevel = 2;
@@ -101,18 +88,15 @@ message PlayerStatus{
     float playerCurHp = 6;
     float playerCurMp = 7;
 }
-
 message BattleLog{
     string msg = 1;
     bool typingAnimation = 2;
     repeated BtnInfo btns = 3; // Optional
 }
-
 message BtnInfo{
     string msg = 1;
     bool enable = 2;
 }
-
 //패킷 명세
 message C_SigninRequest{
     string id = 1;
@@ -120,158 +104,125 @@ message C_SigninRequest{
     string email = 3;
     string verifyPassword = 4;
 }
-
 message S_SigninResponse{
     bool success = 1;
     string message = 2;
     GlobalFailCode failCode = 3;
 }
-
 message C_LoginRequest{
     string id = 1;
     string password = 2;
 }
-
 message S_LoginRequest{
     bool success = 1;
     string message = 2;
     string token = 3;
-    GlobalFailCode failCode = 4;    
+    GlobalFailCode failCode = 4;
 }
-
 message C_EnterRequest{
     string nickname = 1;
     int32 class = 2;
 }
-
 message S_EnterResponse{
     PlayerInfo player = 1;
 }
-
 message S_SpawnNotification{
     repeated PlayerInfo players = 1;
 }
-
 message S_DespawnNotification{
     repeated int32 playerIds = 1;
 }
-
 message C_MoveRequest{
     TransformInfo transform = 1;
 }
-
 message S_MoveResponse{
     int32 playerId = 1;
     TransformInfo transform = 2;
 }
-
 message C_AnimationRequest{
     int32 aniCode = 1;
 }
-
 message S_AnimationResponse{
     int32 playerId = 1;
     int32 aniCode = 2;
 }
-
 message C_ChatRequest{
     int32 playerId = 1;
     string senderName = 2;
     string chatMsg = 3;
 }
-
 message S_ChatResponse{
   int32 playerId = 1;
   string chatMsg = 2;
 }
-
 message C_EnterDungeonRequest{
   int32 dungeonCode = 1;
 }
-
 message S_EnterDungeonResponse{
   DungeonInfo dungeonInfo = 1;
   PlayerStatus player = 2;
   ScreenText screenText = 3; // Option
   BattleLog battleLog = 4;
 }
-
 message C_EquipItemRequest{
     int32 playerId = 1;
     EquipmentInfo equipmentInfo = 2;
     ItemInfo itemInfo = 3;
 }
-
 message S_EquipItemResponse{
     EquipmentInfo equipmentInfo = 1;
     ItemInfo itemInfo = 2;
 }
-
 message C_UnequipItemRequest{
     int32 playerId = 1;
     EquipmentInfo equipmentInfo = 2;
     ItemInfo itemInfo = 3;
 }
-
 message S_UnequipItemResponse{
     EquipmentInfo equipmentInfo = 1;
     ItemInfo itemInfo = 2;
 }
-
 message C_BuyItemRequest{
     int32 playerId = 1;
     InventoryInfo inventoryInfo = 2;
     ItemInfo itemInfo = 3;
 }
-
 message S_BuyItemResponse{
     InventoryInfo inventoryInfo = 1;
     ItemInfo itemInfo = 2;
 }
-
 message C_SellItemRequest{
     int32 playerId = 1;
     InventoryInfo inventoryInfo = 2;
     ItemInfo itemInfo = 3;
 }
-
 message S_SellItemResponse{
     InventoryInfo inventoryInfo = 1;
     ItemInfo itemInfo = 2;
 }
-
 message S_BattleLogNoification{
     BattleLog battleLog = 1;
 }
-
 message S_SetPlayerHpNotification{
     float hp = 1;
 }
-
 message S_SetPlayerMpNotification{
     float mp = 1;
 }
-
 message S_SetMonsterHpNotification{
     int32 monsterIdx = 1;
     float hp = 2;
 }
-
 message C_PlayerActionRequest{
     int32 responseCode = 1;
 }
-
 message S_PlayerActionResponse{
     int32 targetMonsterIdx = 1;
     ActionSet actionSet = 2;
 }
-
 message S_MonsterActionNotification{
     int32 actionMonsterIdx = 1;
     ActionSet actionSet = 2;
 }
-
 message S_LeaveDungeonResponse{
-
 }
-
