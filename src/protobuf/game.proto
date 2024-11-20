@@ -40,7 +40,7 @@ message StatInfo{
 }
 
 message InventoryInfo{
-    repeated ItemInfo = 1;
+    repeated float ItemInfo = 1;
 }
 
 message ItemInfo{
@@ -53,7 +53,7 @@ message EquipmentInfo{
     int32 head = 2;
     int32 body = 3;
     int32 hands = 4;
-    int32 legs = 5
+    int32 legs = 5;
 }
 
 message ScreenText{

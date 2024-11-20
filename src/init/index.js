@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { loadProto } from './loadProtos.js';
+import { loadProto } from './loadProto.js';
 
 const initServer = async () => {
     try {
