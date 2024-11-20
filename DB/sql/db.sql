@@ -31,7 +31,6 @@ CREATE TABLE `class` (
     PRIMARY KEY (`class`)
 );
 
-
 CREATE TABLE `Character` (
     `playerId` INT NOT NULL AUTO_INCREMENT,
     `class` INT NOT NULL,
@@ -174,7 +173,6 @@ CREATE TABLE `Shop` (
     PRIMARY KEY (`ShopId`),
     FOREIGN KEY (`PotionId`) REFERENCES `potion`(`PotionId`)
 );
-
 
 --class 데이터 삽입
 INSERT INTO class (`class`, `JobName`, `BaseHp`, `BaseMp`, `BaseAttack`, `BaseDefense`, `BaseMagic`, `BaseEffect`) VALUE
