@@ -20,4 +20,3 @@ export const getProtoTypeNameByHandlerId = (packetType) => {
       throw Error();
     }
     return handlers[packetType].protoType;
-};
