@@ -1,13 +1,12 @@
-import protobuf from 'protobufjs';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import protobuf from 'protobufjs';
+import { packetNames } from '../protobuf/packetNames.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PROTO_PATH = path.resolve(__dirname, '../protobuf/game.proto'); // .proto 파일 경로 설정
-
-export let GamePacket = null;
-export let GlobalFailCode = null;
+const protoDir = path.join(__dirname, '../protobuf');
 
 const getAllProtoFiles = (dir, fileList = []) => {
   const files = fs.readdirSync(dir);
@@ -31,20 +30,22 @@ const protoMessages = {};
 
 export const loadProto = async () => {
   try {
-    const root = await protobuf.load(PROTO_PATH);
-    GamePacket = await root.lookupType('GamePacket');
-    if (GamePacket) {      
-      console.log(`성공적으로 로드됨: ${GamePacket}`);
-    }
-    
-    GlobalFailCode = root.lookupEnum('GlobalFailCode');;
+    const root = new protobuf.Root();
 
-    if(GlobalFailCode)
-    {
-      console.log(`성공적으로 로드됨: ${GlobalFailCode}`);
+    await Promise.all(protoFiles.map((file) => root.load(file)));
+    for (const [packetName, types] of Object.entries(packetNames)) {
+      protoMessages[packetName] = {};
+      for (const [type, typeName] of Object.entries(types)) {
+        protoMessages[packetName][type] = root.lookup(typeName);
+      }
     }
-  } catch (err) {
-    console.error("Proto 파일 로드 중 오류 발생:", err);
-    throw err;
+
+    console.log(`Protobuf 파일이 로드되었습니다.`);
+  } catch (error) {
+    console.error(`Protobuf 파일 로드 중 오류가 발생했습니다.`, error);
   }
+};
+
+export const getProtoMessages = () => {
+  return { ...protoMessages };
 };
