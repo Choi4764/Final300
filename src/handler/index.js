@@ -10,6 +10,10 @@ const handlers = {
         handler: enter,
         protoType: 'game.C_EnterRequest'
     },
+    //회원가입 및 로그인
+    [PACKET_TYPE.REGISTER_REQUEST]: { handler: registerHandler },
+    [PACKET_TYPE.LOGIN_REQUEST]: { handler: loginHandler }
+
 }
 
 export const getHandlerByPacketType = (packetType) => {
