@@ -17,5 +17,11 @@ export const PACKET_TYPE = {
     PARTY_REQUEST: 6,
     PARTY_RESPONSE: 7,
 
+    //상점
+    BUY_REQUEST: 8,
+    BUY_RESPONSE: 9,
+    SELL_REQUEST: 10,
+    SELL_RESPONSE: 11,
+
     
 };
