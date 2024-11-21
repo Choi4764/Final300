@@ -1,7 +1,7 @@
-export const TOTAL_LENGTH = 5;
-export const PACKET_SIZE_LENGTH = 4;
-export const PACKET_ID_SIZE = 1;
-export const PACKET_DATA = {
+export const TOTAL_LENGTH = 4;
+export const PACKET_TYPE_LENGTH = 1;
+
+export const PACKET_TYPE = {
     C_EnterRequest: 0,
     S_EnterResponse: 1,
 

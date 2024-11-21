@@ -1,7 +1,10 @@
+import { config } from "../../config/config.js";
 import { getProtoMessages } from "../../init/loadProtos.js";
 import { getGameSession } from "../../sessions/game.session.js";
 import { getUserBySocket } from "../../sessions/user.session.js";
 import sendResponsePacket from "../../utils/response/createResponse.js";
+
+import { findCharacterByUserIdAndClass, findUserByUsername, getJobInfo, insertCharacter, } from "../../../DB/user/user.db.js";
 /*
 
 //request
@@ -20,11 +23,6 @@ export const enter = async({socket, payload}) => {
   try{
     const protoMessages = getProtoMessages();
     const GamePacket = protoMessages.game.GamePacket;
-    const gamePacket = GamePacket.decode(payload);
-
-    // const enterRequest = gamePacket.enterRequest;
-    // const {nickname, job} = enterRequest;
-    // console.log(`in data: ${nickname}, ${job}`);
 
     const {nickname} = payload;
     const characterClass = payload.class;
@@ -85,15 +83,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
     throw new Error('Character data is not properly initialized.');
   }
 
-  // const userItemInDB = await getUserItemsByCharacterId(character.characterId);
-  // const userItems = [];
-  // for (const userItem of userItemInDB) {
-  //   const item = new Item(userItem.id, userItem.quantity);
-  //   userItems.push(item);
-  // }
-  // const inven = {};
-  // inven.items = userItems;
-
   // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
   // 그렇지 않으면 유저세션, 게임세션에 추가한다.
   const curUser = await addUser(socket, effectCode, character);
@@ -146,14 +135,6 @@ const getUserInfoFromDB = async (socket, nickname, characterClass) => {
 
 const getUserInfoFromSession = async (socket, userExist) => {
   const playerInfo = await getPlayerInfo(socket);
-  // user 세션의 items중 quantity 0인 item 삭제
-  // for (let i = playerInfo.inven.items.length - 1; i >= 0; i--) {
-  //   const item = playerInfo.inven.items[i];
-  //   if (item.quantity === 0) {
-  //     playerInfo.inven.items.splice(i, 1);
-  //   }
-  // }
-
   userExist.playerInfo = playerInfo;
 
   return userExist;

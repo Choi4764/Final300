@@ -1,4 +1,4 @@
-import { PACKET_DATA, PACKET_ID_SIZE, PACKET_SIZE_LENGTH } from "../constants/header.js";
+import { PACKET_TYPE, PACKET_TYPE_LENGTH,  } from "../constants/header.js";
 
 export const serializer = (message, packetSize, packetId = 1) => {
     //packetsize = 4bytes

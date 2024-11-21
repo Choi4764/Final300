@@ -1,4 +1,4 @@
-import { PACKET_DATA } from '../../constants/header.js';
+import { PACKET_TYPE } from '../../constants/header.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { serializer } from '../serializer.js';
 
@@ -19,7 +19,7 @@ const sendResponsePacket = (socket, packetType, responseMessage) => {
     const serializedPacket = serializer(gamePacketBuffer, packetType);
     socket.write(serializedPacket);
 
-    console.log(`Sent packet of type ${PACKET_DATA[packetType]} to client.`);
+    console.log(`Sent packet of type ${PACKET_TYPE[packetType]} to client.`);
   } catch (error) {
     console.error('Error sending response packet', error);
   }

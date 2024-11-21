@@ -1,8 +1,8 @@
-import { PACKET_DATA } from "../constants/header.js";
+import { PACKET_TYPE } from "../constants/header.js";
 import { enter } from "./game/enter.handler.js"
 
 const handlers = {
-    [PACKET_DATA.C_EnterRequest]: {
+    [PACKET_TYPE.C_EnterRequest]: {
         handler: enter,
         protoType: 'game.C_EnterRequest'
     },
