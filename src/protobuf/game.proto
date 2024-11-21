@@ -121,7 +121,7 @@ message S_LoginRequest{
 }
 message C_EnterRequest{
     string nickname = 1;
-    int32 class = 2;
+    int32 job = 2;
 }
 message S_EnterResponse{
     PlayerInfo player = 1;
@@ -225,4 +225,17 @@ message S_MonsterActionNotification{
     ActionSet actionSet = 2;
 }
 message S_LeaveDungeonResponse{
+}
+
+message GamePacket{
+    oneof payload{
+        C_Enter enterRequest = 0;
+        S_Enter enterResponse = 1;
+        S_Spawn spawnNotification = 2;
+        S_Despawn despawnNotification = 5;
+        C_Move moveRequest = 6;
+        S_Move moveResponse = 7;
+        C_Animation animationRequest = 8;
+        S_Animation animationResponse = 9;
+    }
 }
