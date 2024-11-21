@@ -63,7 +63,7 @@ CREATE TABLE `Character` (
 );
 
 CREATE TABLE `items` (
-    `Key` INT NOT NULL AUTO_INCREMENT,
+    `ItemId` INT NOT NULL AUTO_INCREMENT,
     `ItemName` VARCHAR(255) NOT NULL,
     `RequireLevel` INT NOT NULL,
     `ItemType` VARCHAR(255) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE `items` (
 );
 
 CREATE TABLE `effects` (
-    `Key` INT NOT NULL AUTO_INCREMENT,
+    `effectsId` INT NOT NULL AUTO_INCREMENT,
     `EffectName` VARCHAR(255) NOT NULL,
     `EffectType` VARCHAR(255) NOT NULL,
     `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
