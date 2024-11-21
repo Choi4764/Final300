@@ -1,5 +1,6 @@
 import { loginHandler } from './user/loginHandler.js'
 import { registerHandler } from './user/registerHandler.js'
+import { PACKET_TYPE } from '../constants/header.js';
 
 const handlers = {
     [PACKET_TYPE.REGISTER_REQUEST]: { handler: registerHandler },
