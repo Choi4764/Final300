@@ -164,41 +164,58 @@ message S_EnterDungeonResponse{
   ScreenText screenText = 3; // Option
   BattleLog battleLog = 4;
 }
-message C_EquipItemRequest{
-    int32 playerId = 1;
-    EquipmentInfo equipmentInfo = 2;
-    ItemInfo itemInfo = 3;
+
+// 장비 착용 요청 및 응답
+message C_EquipItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 itemId = 2; // 착용할 아이템 ID
 }
-message S_EquipItemResponse{
-    EquipmentInfo equipmentInfo = 1;
-    ItemInfo itemInfo = 2;
+
+message S_EquipItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 착용된 아이템 ID
 }
-message C_UnequipItemRequest{
-    int32 playerId = 1;
-    EquipmentInfo equipmentInfo = 2;
-    ItemInfo itemInfo = 3;
+
+// 장비 해제 요청 및 응답
+message C_UnequipItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 itemId = 2; // 해제할 아이템 ID
 }
-message S_UnequipItemResponse{
-    EquipmentInfo equipmentInfo = 1;
-    ItemInfo itemInfo = 2;
+
+message S_UnequipItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 해제된 아이템 ID
 }
-message C_BuyItemRequest{
-    int32 playerId = 1;
-    InventoryInfo inventoryInfo = 2;
-    ItemInfo itemInfo = 3;
+
+// 아이템 구매 요청 및 응답
+message C_BuyItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 shopId = 2; // 상점 ID
+    int32 itemId = 3; // 구매할 아이템 ID
+    int32 quantity = 4; // 구매 수량
 }
-message S_BuyItemResponse{
-    InventoryInfo inventoryInfo = 1;
-    ItemInfo itemInfo = 2;
+
+message S_BuyItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 구매한 아이템 ID
+    int32 quantity = 4; // 구매된 수량
 }
-message C_SellItemRequest{
-    int32 playerId = 1;
-    InventoryInfo inventoryInfo = 2;
-    ItemInfo itemInfo = 3;
+
+// 아이템 판매 요청 및 응답
+message C_SellItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 itemId = 2; // 판매할 아이템 ID
+    int32 quantity = 3; // 판매 수량
 }
-message S_SellItemResponse{
-    InventoryInfo inventoryInfo = 1;
-    ItemInfo itemInfo = 2;
+
+message S_SellItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 판매된 아이템 ID
+    int32 quantity = 4; // 판매된 수량
 }
 message S_BattleLogNoification{
     BattleLog battleLog = 1;
