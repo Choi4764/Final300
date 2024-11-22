@@ -1,3 +1,7 @@
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import { handleError } from '../../utils/error/errorHandler.js';
+
 export const chatHandler = ({ socket, payload }) => {
     const { nickname, chatContext } = payload;
 
