@@ -1,5 +1,3 @@
-
-import { PACKET_TYPE } from "../constants/header.js";
 import { enter } from "./game/enter.handler.js";
 import { loginHandler } from './user/loginHandler.js';
 import { registerHandler } from './user/registerHandler.js';
@@ -28,3 +26,4 @@ export const getProtoTypeNameByHandlerId = (packetType) => {
       throw Error();
     }
     return handlers[packetType].protoType;
+}
