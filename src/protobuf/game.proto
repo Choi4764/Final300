@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package game;
 //실패
 enum GlobalFailCode {
     NONE = 0;
@@ -196,89 +197,6 @@ message S_EnterDungeonResponse{
   BattleLog battleLog = 4;
 }
 
-message C_EquipItemRequest{
-    int32 playerId = 1;
-    EquipmentInfo equipmentInfo = 2;
-    ItemInfo itemInfo = 3;
-}
-
-message S_EquipItemResponse{
-    EquipmentInfo equipmentInfo = 1;
-    ItemInfo itemInfo = 2;
-}
-
-message C_UnequipItemRequest{
-    int32 playerId = 1;
-    EquipmentInfo equipmentInfo = 2;
-    ItemInfo itemInfo = 3;
-}
-
-message S_UnequipItemResponse{
-    EquipmentInfo equipmentInfo = 1;
-    ItemInfo itemInfo = 2;
-}
-
-message C_BuyItemRequest{
-    int32 playerId = 1;
-    InventoryInfo inventoryInfo = 2;
-    ItemInfo itemInfo = 3;
-}
-
-message S_BuyItemResponse{
-    InventoryInfo inventoryInfo = 1;
-    ItemInfo itemInfo = 2;
-}
-
-message C_SellItemRequest{
-    int32 playerId = 1;
-    InventoryInfo inventoryInfo = 2;
-    ItemInfo itemInfo = 3;
-}
-
-message S_SellItemResponse{
-    InventoryInfo inventoryInfo = 1;
-    ItemInfo itemInfo = 2;
-}
-
-message S_BattleLogNoification{
-    BattleLog battleLog = 1;
-}
-
-message S_SetPlayerHpNotification{
-    float hp = 1;
-}
-
-message S_SetPlayerMpNotification{
-    float mp = 1;
-}
-
-message S_SetMonsterHpNotification{
-    int32 monsterIdx = 1;
-    float hp = 2;
-}
-
-message C_PlayerActionRequest{
-    int32 responseCode = 1;
-}
-
-message S_PlayerActionResponse{
-    int32 targetMonsterIdx = 1;
-    ActionSet actionSet = 2;
-}
-
-message S_MonsterActionNotification{
-    int32 actionMonsterIdx = 1;
-    ActionSet actionSet = 2;
-}
-
-message S_LeaveDungeonResponse{
-
-}
-
-syntax = "proto3";
-
-package game;
-
 // 장비 착용 요청 및 응답
 message C_EquipItemRequest {
     int32 inventoryId = 1; // 인벤토리 ID
@@ -331,3 +249,39 @@ message S_SellItemResponse {
     int32 itemId = 3; // 판매된 아이템 ID
     int32 quantity = 4; // 판매된 수량
 }
+
+message S_BattleLogNoification{
+    BattleLog battleLog = 1;
+}
+
+message S_SetPlayerHpNotification{
+    float hp = 1;
+}
+
+message S_SetPlayerMpNotification{
+    float mp = 1;
+}
+
+message S_SetMonsterHpNotification{
+    int32 monsterIdx = 1;
+    float hp = 2;
+}
+
+message C_PlayerActionRequest{
+    int32 responseCode = 1;
+}
+
+message S_PlayerActionResponse{
+    int32 targetMonsterIdx = 1;
+    ActionSet actionSet = 2;
+}
+
+message S_MonsterActionNotification{
+    int32 actionMonsterIdx = 1;
+    ActionSet actionSet = 2;
+}
+
+message S_LeaveDungeonResponse{
+
+}
+
