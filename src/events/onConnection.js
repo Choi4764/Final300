@@ -7,10 +7,9 @@ export const onConnection = async (socket) => {
 
     // Initialize buffer for the socket
     socket.buffer = Buffer.alloc(0);
-  
+
     // Attach event handlers
     socket.on('data', onData(socket));
     socket.on('end', onEnd(socket));
     socket.on('error', onError(socket));
 }
-
