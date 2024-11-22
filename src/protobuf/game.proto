@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package game;
 //실패
 enum GlobalFailCode {
     NONE = 0;
@@ -196,6 +197,7 @@ message S_EnterDungeonResponse{
   BattleLog battleLog = 4;
 }
 
+<<<<<<< HEAD
 message C_EquipItemRequest{
     int32 playerId = 1;
     EquipmentInfo equipmentInfo = 2;
@@ -238,6 +240,59 @@ message C_SellItemRequest{
 message S_SellItemResponse{
     InventoryInfo inventoryInfo = 1;
     ItemInfo itemInfo = 2;
+=======
+// 장비 착용 요청 및 응답
+message C_EquipItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 itemId = 2; // 착용할 아이템 ID
+}
+
+message S_EquipItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 착용된 아이템 ID
+}
+
+// 장비 해제 요청 및 응답
+message C_UnequipItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 itemId = 2; // 해제할 아이템 ID
+}
+
+message S_UnequipItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 해제된 아이템 ID
+}
+
+// 아이템 구매 요청 및 응답
+message C_BuyItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 shopId = 2; // 상점 ID
+    int32 itemId = 3; // 구매할 아이템 ID
+    int32 quantity = 4; // 구매 수량
+}
+
+message S_BuyItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 구매한 아이템 ID
+    int32 quantity = 4; // 구매된 수량
+}
+
+// 아이템 판매 요청 및 응답
+message C_SellItemRequest {
+    int32 inventoryId = 1; // 인벤토리 ID
+    int32 itemId = 2; // 판매할 아이템 ID
+    int32 quantity = 3; // 판매 수량
+}
+
+message S_SellItemResponse {
+    bool success = 1; // 성공 여부
+    string message = 2; // 결과 메시지
+    int32 itemId = 3; // 판매된 아이템 ID
+    int32 quantity = 4; // 판매된 수량
+>>>>>>> e6ed23b283d9ddc6bae948e6bf605c7063e18098
 }
 
 message S_BattleLogNoification{
@@ -275,4 +330,7 @@ message S_LeaveDungeonResponse{
 
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6ed23b283d9ddc6bae948e6bf605c7063e18098

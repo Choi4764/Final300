@@ -1,3 +1,4 @@
-export const onError = (socket, err) => {
+export const onError = (socket) => async (err) => {
     console.error(`Error on connection with ${socket.remoteAddress}:`, err.message);
 };
+
