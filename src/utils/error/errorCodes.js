@@ -1,4 +1,3 @@
-
 export const ErrorCodes = {
     SOCKET_ERROR: 10000,
     CLIENT_VERSION_MISMATCH: 10001,
