@@ -19,7 +19,7 @@ message S_Enter {
 }
 
 */
-export const enter = async({socket, payload}) => {
+export const EnterRequest = async({socket, payload}) => {
   try{
     const protoMessages = getProtoMessages();
     const GamePacket = protoMessages.game.GamePacket;

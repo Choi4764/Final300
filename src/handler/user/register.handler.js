@@ -14,7 +14,7 @@ const schema = Joi.object({
   }),
 });
 
-export const registerHandler = async ({ packetType, data, socket }) => {
+export const C_registerHandler = async ({ packetType, data, socket }) => {
   try {
     const { id, password, email } = await schema.validateAsync(data);
     console.log('data', data);

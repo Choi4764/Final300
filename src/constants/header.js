@@ -1,7 +1,10 @@
-export const TOTAL_LENGTH = 4;
-export const PACKET_TYPE_LENGTH = 1;
+export const PAYLOAD_LENGTH = 4;
+export const PACKET_TYPE_LENGTH = 2;
+export const VERSION_LENGTH = 1;
+export const SEQUENCE_LENGTH = 4;
 
 export const PACKET_TYPE = {
+    // 회원가입 및 로그인
     C_EnterRequest: 0,
     S_EnterResponse: 1,
 
@@ -15,6 +18,7 @@ export const PACKET_TYPE = {
     S_AnimationResponse: 9,
 }
 
+//콘솔 로그 확인용
 export const PACKET_ID = {
     0: 'C_EnterRequest',
     1: 'S_EnterResponse',
