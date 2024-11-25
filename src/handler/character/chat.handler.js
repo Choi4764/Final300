@@ -1,22 +1,21 @@
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
+import { getUserById } from '../../sessions/user.session.js';
+import { getGameSession } from '../../sessions/game.session.js';
+import { TOWN_SESSION_ID } from '../../constants/session.js';
 
-export const chatHandler = ({ socket, payload }) => {
+export const C_chatHandler = async ({ socket, payload }) => {
     const { playerId, chatContext } = payload;
-
+  
     try {
-        const { chatContext } = packet;
+        const sender = await getUserById(playerId);
+        if (!sender) throw new Error('player not found');
 
-        const user = getUserById(playerId);
-        if (!user) {
-          throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
-        }
-    
-        const gameSession = user.getSession();
-        if (!gameSession) {
-          throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '세션을 찾을 수 없습니다.');
-        }
+        const gameSession = getGameSession(TOWN_SESSION_ID);
+        if(!gameSession) throw new Error('session not found');
+
+        if(chatContext[0] === '/'){}
     
         gameSession.chatPlayer(playerId, chatContext);
       } catch (error) {
