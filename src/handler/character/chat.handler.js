@@ -15,9 +15,12 @@ export const C_chatHandler = async ({ socket, payload }) => {
         const gameSession = getGameSession(TOWN_SESSION_ID);
         if(!gameSession) throw new Error('session not found');
 
-        if(chatContext[0] === '/'){}
-    
-        gameSession.chatPlayer(playerId, chatContext);
+        if(chatContext[0] === '/'){
+
+        }
+        else{
+          
+        }
       } catch (error) {
         handleError(socket, error);
     }
