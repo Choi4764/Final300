@@ -1,7 +1,7 @@
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
-import { getUserById } from '../../sessions/user.session.js';
+import { getAllUsers, getUserById } from '../../sessions/user.session.js';
 import { getGameSession } from '../../sessions/game.session.js';
 import { TOWN_SESSION_ID } from '../../constants/session.js';
 
@@ -19,9 +19,26 @@ export const C_chatHandler = async ({ socket, payload }) => {
 
         }
         else{
-          
+          chatAll(sender, chatContext);
         }
       } catch (error) {
+        handleError(socket, error);
+    }
+};
+
+export async function chatAll(sender, context) {
+    try{
+        const allUsers = getAllUsers();
+
+        const chatResponse = createResponse('response', 'S_ChatResponse', {
+          playerId: sender.playerId,
+          chatContext: `${sender.nickname}: ${context}`
+        });
+
+        allUsers.forEach((user) => {
+          user.socket.write(chatResponse);
+        });
+    } catch (error) {
         handleError(socket, error);
     }
 };
