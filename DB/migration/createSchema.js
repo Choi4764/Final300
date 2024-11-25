@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const dbConfig = {
     host: '127.0.0.1',
     user: 'root',
-    password: '1102',
+    password: 'rlatjsdn1',
     database: 'MORPG_DB'
 };
 
