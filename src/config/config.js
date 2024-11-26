@@ -1,5 +1,5 @@
 import {PORT, HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} from '../constants/env.js'
-import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js'
+import { PACKET_HEADER_LENGTH, PACKET_ID_LENGTH, PACKET_SIZE_LENGTH } from '../constants/header.js'
 
 import { TOWN_SESSION_ID } from '../constants/session.js'
 
@@ -9,8 +9,9 @@ export const config = {
         host: HOST,
     },
     packet: {
-        totalLength: TOTAL_LENGTH,
-        typeLength: PACKET_TYPE_LENGTH,
+        packetSizeLength: PACKET_SIZE_LENGTH,
+        packetIdLength: PACKET_ID_LENGTH,
+        packetHeaderLength: PACKET_HEADER_LENGTH,
     },
 
     database: {

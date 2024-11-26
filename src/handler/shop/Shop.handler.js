@@ -1,28 +1,34 @@
-const { InventoryItems, Shop, Character, items } = require('../models'); // Sequelize 모델 로드
+const { InventoryItems, Shop, Character, items } = require('../../../DB/model/model.js')
 
 /**
  * 아이템 구매 핸들러
- * @param {Object} req - 클라이언트로부터 받은 요청
- * @param {Object} res - 클라이언트로 보낼 응답
+ * @param {Object} data - 클라이언트로부터 받은 요청 데이터
+ * @returns {Object} - 처리 결과를 담은 응답 데이터
  */
-const handleBuyItem = async (req, res) => {
-    const { inventoryId, shopId, itemId, quantity } = req.body;
+const BuyItemHandler = async (data) => {
+    const { inventoryId, shopId, itemId, quantity } = data;
 
     try {
         // 1. 상점에서 아이템 정보 가져오기
         const shopItem = await Shop.findOne({ where: { ShopId: shopId, itemId } });
         if (!shopItem) {
-            return res.status(404).json({ success: false, message: '아이템이 상점에 없습니다.' });
+            return { success: false, message: '아이템이 상점에 없습니다.' };
         }
 
         const itemCost = shopItem.cost * quantity;
 
         // 2. 인벤토리에서 골드 확인
         const inventory = await InventoryItems.findOne({ where: { InventoryId: inventoryId } });
+        if (!inventory) {
+            return { success: false, message: '인벤토리를 찾을 수 없습니다.' };
+        }
         const player = await Character.findOne({ where: { playerId: inventory.playerId } });
+        if (!player) {
+            return { success: false, message: '플레이어를 찾을 수 없습니다.' };
+        }
 
         if (player.gold < itemCost) {
-            return res.status(400).json({ success: false, message: '골드가 부족합니다.' });
+            return { success: false, message: '골드가 부족합니다.' };
         }
 
         // 3. 골드 차감 및 인벤토리 업데이트
@@ -52,20 +58,20 @@ const handleBuyItem = async (req, res) => {
             });
         }
 
-        return res.status(200).json({ success: true, message: '아이템 구매 성공!' });
+        return { success: true, message: '아이템 구매 성공!', itemId, quantity };
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: '서버 에러가 발생했습니다.' });
+        return { success: false, message: '서버 에러가 발생했습니다.' };
     }
 };
 
 /**
  * 아이템 판매 핸들러
- * @param {Object} req - 클라이언트로부터 받은 요청
- * @param {Object} res - 클라이언트로 보낼 응답
+ * @param {Object} data - 클라이언트로부터 받은 요청 데이터
+ * @returns {Object} - 처리 결과를 담은 응답 데이터
  */
-const handleSellItem = async (req, res) => {
-    const { inventoryId, itemId, quantity } = req.body;
+const SellItemHandler = async (data) => {
+    const { inventoryId, itemId, quantity } = data;
 
     try {
         // 1. 인벤토리에서 아이템 확인
@@ -73,20 +79,26 @@ const handleSellItem = async (req, res) => {
             where: { InventoryId: inventoryId, itemId },
         });
         if (!inventoryItem || inventoryItem.quantify < quantity) {
-            return res.status(400).json({ success: false, message: '아이템 수량이 부족합니다.' });
+            return { success: false, message: '아이템 수량이 부족합니다.' };
         }
 
         // 2. 아이템 정보에서 판매 가격 가져오기
         const item = await items.findOne({ where: { Key: itemId } });
         if (!item) {
-            return res.status(404).json({ success: false, message: '아이템 정보를 찾을 수 없습니다.' });
+            return { success: false, message: '아이템 정보를 찾을 수 없습니다.' };
         }
 
         const sellPrice = item.ItemCost * quantity;
 
         // 3. 플레이어의 골드 증가
         const inventory = await InventoryItems.findOne({ where: { InventoryId: inventoryId } });
+        if (!inventory) {
+            return { success: false, message: '인벤토리를 찾을 수 없습니다.' };
+        }
         const player = await Character.findOne({ where: { playerId: inventory.playerId } });
+        if (!player) {
+            return { success: false, message: '플레이어를 찾을 수 없습니다.' };
+        }
 
         await Character.update(
             { gold: player.gold + sellPrice },
@@ -105,14 +117,14 @@ const handleSellItem = async (req, res) => {
             );
         }
 
-        return res.status(200).json({ success: true, message: '아이템 판매 성공!' });
+        return { success: true, message: '아이템 판매 성공!', itemId, quantity, sellPrice };
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: '서버 에러가 발생했습니다.' });
+        return { success: false, message: '서버 에러가 발생했습니다.' };
     }
 };
 
 module.exports = {
-    handleBuyItem,
-    handleSellItem,
+    BuyItemHandler,
+    SellItemHandler,
 };
