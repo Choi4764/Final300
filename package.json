@@ -1,12 +1,12 @@
 {
   "name": "morpg",
   "version": "1.0.0",
-  "description": "",
+  "description": "FINAL300",
   "type": "module",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "migrate": "nodemon DB/migration/createSchema.js"
+    "migrate": "nodemon src/db/migration/createSchema.js"
   },
   "keywords": [],
   "author": "",

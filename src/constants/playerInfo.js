@@ -1,0 +1,31 @@
+// export const PLAYER_INFO = {
+//     PLAYER_ID,
+//     NICKNAME,
+//     CLASS,
+//     //transformInfo
+//     POSX,
+//     POSY,
+//     POSZ,
+//     ROT,
+//     //statInfo
+//     LEVEL,
+//     HP,
+//     MAX_HP,
+//     MP,
+//     MAX_MP,
+//     ATK,
+//     DEF,
+//     MAGIC,
+//     SPEED,
+//     //inventoryInfo
+//         //ITEMINFO
+//         ITEM_ID,
+//         QUANTITY,
+//     //equipmentInfo
+//     WEAPON,
+//     HEAD,
+//     BODY,
+//     HANDS,
+//     LEGS,
+
+// }
