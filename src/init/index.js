@@ -1,14 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
-import { loadProto } from './loadProtos.js';
+import { loadProtos } from './loadProtos.js';
+import { loadGameAssets } from './loadAssets.js';
 
 const initServer = async () => {
     try {
-      await loadProto();
-    } catch (error) {
+      await loadProtos();
+      await loadGameAssets();
+  } catch (error) {
       console.error(error);
       process.exit(1);
     }
   };
   
   export default initServer;
-  
