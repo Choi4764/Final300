@@ -14,17 +14,18 @@ export const PACKET_TYPE = {
 
     C_AnimationRequest: 8,
     S_AnimationResponse: 9,
+    
+    C_EquipItemRequest: 41,
+    S_EquipItemResponse: 42,
 
-}
+    C_UnequipItemRequest: 43,
+    S_UnequipItemResponse: 44,
 
-export const PACKET_ID = {
-    0: 'C_Enter',
-    1: 'S_Enter',
-    2: 'S_SpawnNotification',
-    5: 'S_DespawnNotification',
-    6: 'C_MoveRequest',
-    7: 'S_MoveResponse',
-    8: 'C_AnimationRequest',
-    9: 'S_AnimationResponse',
-    14: 'erqwerqass',
+    C_BuyItemRequest: 45,
+    S_BuyItemResponse: 46,
+
+    C_SellItemRequest: 47,
+    S_SellItemResponse: 48,
+
+
 }
