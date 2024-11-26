@@ -2,7 +2,7 @@ import { onData } from './onData.js'
 import { onEnd } from './onEnd.js'
 import { onError } from './onError.js'
 
-export const onConnection = async (socket) => {
+export const onConnection = (socket) => {
     console.log(`Client connected from : ${socket.remoteAddress}, ${socket.remotePort}`);
 
     // Initialize buffer for the socket

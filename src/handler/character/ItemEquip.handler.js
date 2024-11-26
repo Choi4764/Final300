@@ -1,25 +1,27 @@
-const { InventoryItems, Shop, Character, items } = require('../models'); // Sequelize 모델 로드
+const { InventoryItems, Shop, Character, Items } = require('../../../DB/model/model.js'); // Sequelize 모델 로드
 
 /**
  * 아이템 장착 핸들러
- * @param {Object} req - 클라이언트로부터 받은 요청
- * @param {Object} res - 클라이언트로 보낼 응답
+ * @param {Object} data - 클라이언트로부터 받은 요청 데이터
+ * @returns {Object} - 처리 결과를 반환
  */
-const handleEquipItem = async (req, res) => {
-    const { playerId, itemId } = req.body;
+const EquipItemHandler = async (data) => {
+    const { playerId, itemId } = data;
 
     if (!playerId || !itemId) {
-        return res.status(400).json({ success: false, message: 'playerId와 itemId는 필수입니다.' });
+        return { success: false, message: 'playerId와 itemId는 필수입니다.' };
     }
 
     try {
-        const item = await items.findOne({ where: { ItemId: itemId } });
+        // 1. 아이템 정보 조회
+        const item = await Items.findOne({ where: { ItemId: itemId } });
         if (!item) {
-            return res.status(404).json({ success: false, message: '아이템을 찾을 수 없습니다.' });
+            return { success: false, message: '아이템을 찾을 수 없습니다.' };
         }
 
         const { ItemHp, ItemMp, ItemAttack, ItemDefense, ItemMagic } = item;
 
+        // 2. 장착 가능한 슬롯 결정
         let column;
         if (itemId >= 1 && itemId <= 100) column = 'HeadId';
         else if (itemId >= 101 && itemId <= 200) column = 'BodyId';
@@ -27,16 +29,18 @@ const handleEquipItem = async (req, res) => {
         else if (itemId >= 301 && itemId <= 400) column = 'LegId';
         else if (itemId >= 1000 && itemId <= 2000) column = 'WeaponId';
         else {
-            return res.status(400).json({ success: false, message: '장착할 수 없는 아이템입니다.' });
+            return { success: false, message: '장착할 수 없는 아이템입니다.' };
         }
 
+        // 3. 캐릭터 정보 조회
         const character = await Character.findOne({ where: { playerId } });
         if (!character) {
-            return res.status(404).json({ success: false, message: '캐릭터를 찾을 수 없습니다.' });
+            return { success: false, message: '캐릭터를 찾을 수 없습니다.' };
         }
 
         const currentItemId = character[column];
 
+        // 4. 캐릭터 스탯 업데이트
         const updatedStats = {
             hp: character.hp - (currentItemId ? ItemHp : 0) + (ItemHp || 0),
             mp: character.mp - (currentItemId ? ItemMp : 0) + (ItemMp || 0),
@@ -45,6 +49,7 @@ const handleEquipItem = async (req, res) => {
             magic: character.magic - (currentItemId ? ItemMagic : 0) + (ItemMagic || 0),
         };
 
+        // 5. 캐릭터 정보 업데이트
         await Character.update(
             {
                 [column]: itemId,
@@ -57,58 +62,61 @@ const handleEquipItem = async (req, res) => {
             { where: { playerId } }
         );
 
-        return res.status(200).json({
+        return {
             success: true,
             message: '아이템이 성공적으로 장착되었습니다.',
             updatedStats,
-        });
+        };
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+        return { success: false, message: '서버 오류가 발생했습니다.' };
     }
 };
 
 /**
  * 아이템 해제 핸들러
- * @param {Object} req - 클라이언트로부터 받은 요청
- * @param {Object} res - 클라이언트로 보낼 응답
+ * @param {Object} data - 클라이언트로부터 받은 요청 데이터
+ * @returns {Object} - 처리 결과를 반환
  */
-const handleUnequipItem = async (req, res) => {
-    const { playerId, itemType } = req.body;
+const UnequipItemHandler = async (data) => {
+    const { playerId, itemType } = data;
 
     if (!playerId || !itemType) {
-        return res.status(400).json({ success: false, message: 'playerId와 itemType은 필수입니다.' });
+        return { success: false, message: 'playerId와 itemType은 필수입니다.' };
     }
 
     try {
+        // 1. 슬롯 컬럼 결정
         let column;
-
         if (itemType === 'Head') column = 'HeadId';
         else if (itemType === 'Body') column = 'BodyId';
         else if (itemType === 'Hand') column = 'HandId';
         else if (itemType === 'Leg') column = 'LegId';
         else if (itemType === 'Weapon') column = 'WeaponId';
         else {
-            return res.status(400).json({ success: false, message: '해제할 수 없는 아이템 타입입니다.' });
+            return { success: false, message: '해제할 수 없는 아이템 타입입니다.' };
         }
 
+        // 2. 캐릭터 정보 조회
         const character = await Character.findOne({ where: { playerId } });
         if (!character) {
-            return res.status(404).json({ success: false, message: '캐릭터를 찾을 수 없습니다.' });
+            return { success: false, message: '캐릭터를 찾을 수 없습니다.' };
         }
 
         const currentItemId = character[column];
         if (!currentItemId) {
-            return res.status(400).json({ success: false, message: '해당 슬롯에 장착된 아이템이 없습니다.' });
+            return { success: false, message: '해당 슬롯에 장착된 아이템이 없습니다.' };
         }
 
-        const item = await items.findOne({ where: { ItemId: currentItemId } });
+        // 3. 아이템 정보 조회
+        const item = await Items.findOne({ where: { ItemId: currentItemId } });
         if (!item) {
-            return res.status(404).json({ success: false, message: '아이템을 찾을 수 없습니다.' });
+            return { success: false, message: '아이템을 찾을 수 없습니다.' };
         }
 
         const { ItemHp, ItemMp, ItemAttack, ItemDefense, ItemMagic } = item;
 
+        // 4. 캐릭터 스탯 업데이트
         const updatedStats = {
             hp: character.hp - (ItemHp || 0),
             mp: character.mp - (ItemMp || 0),
@@ -117,6 +125,7 @@ const handleUnequipItem = async (req, res) => {
             magic: character.magic - (ItemMagic || 0),
         };
 
+        // 5. 캐릭터 정보 업데이트
         await Character.update(
             {
                 [column]: null,
@@ -129,18 +138,18 @@ const handleUnequipItem = async (req, res) => {
             { where: { playerId } }
         );
 
-        return res.status(200).json({
+        return {
             success: true,
             message: '아이템이 성공적으로 해제되었습니다.',
             updatedStats,
-        });
+        };
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+        return { success: false, message: '서버 오류가 발생했습니다.' };
     }
 };
 
 module.exports = {
-    handleEquipItem,
-    handleUnequipItem,
+    EquipItemHandler,
+    UnequipItemHandler,
 };
