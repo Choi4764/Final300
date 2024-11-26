@@ -1,5 +1,4 @@
 export const gameSessions = [];
-
-export const userSessions = [];
-
 export const townSession = [];
+export const InstanceDungeonSessions = [];
+export const userSessions = [];
