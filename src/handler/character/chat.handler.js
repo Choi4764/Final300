@@ -15,7 +15,7 @@ export const ChatHandler = async ({ socket, payload }) => {
         const gameSession = getGameSession(TOWN_SESSION_ID);
         if(!gameSession) throw new Error('session not found');
 
-        if(chatContext[0] === '/'){
+        if(chatContext[0] === '/'){//명령어 부분 추후 작성
 
         }
         else{
