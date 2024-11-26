@@ -1,7 +1,6 @@
-export const PAYLOAD_LENGTH = 4;
-export const PACKET_TYPE_LENGTH = 2;
-export const VERSION_LENGTH = 1;
-export const SEQUENCE_LENGTH = 4;
+export const PACKET_SIZE_LENGTH = 4; // 패킷의 사이즈(4byte)
+export const PACKET_ID_LENGTH = 1; // 패킷의 아이디 (1byte)
+export const PACKET_HEADER_LENGTH = 5; // 헤더의 길이 (4+1)
 
 export const PACKET_TYPE = {
     C_EnterRequest: 0,
@@ -28,16 +27,4 @@ export const PACKET_TYPE = {
     C_SellItemRequest: 47,
     S_SellItemResponse: 48,
 
-}
-
-//콘솔 로그 확인용
-export const PACKET_ID = {
-    0: 'C_EnterRequest',
-    1: 'S_EnterResponse',
-    2: 'S_SpawnNotification',
-    5: 'S_DespawnNotification',
-    6: 'C_MoveRequest',
-    7: 'S_MoveResponse',
-    8: 'C_AnimationRequest',
-    9: 'S_AnimationResponse',
 }
