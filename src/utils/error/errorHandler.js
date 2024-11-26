@@ -7,12 +7,12 @@ export const handleError = (socket, error) => {
     if (error.code) {
       responseCode = error.code;
       message = error.message;
-      const err = `${error.name}\r\nCode: ${error.code}\r\nMessage: ${error.message}\r\n${error.stack}`;
+      const err = `${error.name}\r\nCode: ${error.code}\r\nMessage: ${error.message}`;
       console.error(err);
     } else {
       responseCode = ErrorCodes.SOCKET_ERROR;
       message = error.message;
-      const err = `${error.name}\r\nMessage: ${error.message}\r\n${error.stack}`;
+      const err = `${error.name}\r\nMessage: ${error.message}`;
       console.error(err);
     }
   } catch (err) {

@@ -4,7 +4,6 @@ export const VERSION_LENGTH = 1;
 export const SEQUENCE_LENGTH = 4;
 
 export const PACKET_TYPE = {
-    // 회원가입 및 로그인
     C_EnterRequest: 0,
     S_EnterResponse: 1,
 
@@ -16,6 +15,19 @@ export const PACKET_TYPE = {
 
     C_AnimationRequest: 8,
     S_AnimationResponse: 9,
+
+    C_EquipItemRequest: 41,
+    S_EquipItemResponse: 42,
+
+    C_UnequipItemRequest: 43,
+    S_UnequipItemResponse: 44,
+
+    C_BuyItemRequest: 45,
+    S_BuyItemResponse: 46,
+
+    C_SellItemRequest: 47,
+    S_SellItemResponse: 48,
+
 }
 
 //콘솔 로그 확인용

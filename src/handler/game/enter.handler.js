@@ -1,10 +1,12 @@
-import { config } from "../../config/config.js";
-import { getProtoMessages } from "../../init/loadProtos.js";
-import { getGameSession } from "../../sessions/game.session.js";
-import { getUserBySocket } from "../../sessions/user.session.js";
+import { createUser, findUserNickname } from "../../db/user/user.db.js";
+import User from "../../classes/models/user.class.js";
+import { PACKET_TYPE } from "../../constants/header.js";
+import { getJobById } from "../../init/loadAssets.js";
+import { addUserAtTown, getAllUserExceptMyself } from "../../sessions/town.session.js";
+import { playerData } from "../../utils/packet/playerPacket.js";
 import sendResponsePacket from "../../utils/response/createResponse.js";
+import { spawnOtherPlayerHandler } from "./spawn.handler.js";
 
-import { findCharacterByUserIdAndClass, findUserByUsername, getJobInfo, insertCharacter, } from "../../../DB/user/user.db.js";
 /*
 
 //request
@@ -19,123 +21,93 @@ message S_Enter {
 }
 
 */
-export const EnterRequest = async({socket, payload}) => {
-  try{
-    const protoMessages = getProtoMessages();
-    const GamePacket = protoMessages.game.GamePacket;
+export const enterTownHandler = async ({socket, payload}) => {
 
-    const {nickname} = payload;
-    const characterClass = payload.class;
-    const userExist = await getUserBySocket(socket);
+  const {nickname, class: jobClass} = payload;
 
-    //게임 세션을 가져옴.
-    const gameSession = await getGameSession(config.session.townId)
+  const pickJob = getJobById(jobClass);
 
-    var curUser;
-
-    if(!userExist){
-      // 유저가 없으면(첫 접속) DB에서 유저 정보 불러오기.
-      curUser = await getUserInfoFromDB(socket, nickname, characterClass);
-    }else{
-      // 첫 접속이 아니면 세션을 가져오고 DB에 저장.
-      curUser = await getUserInfoFromSession(socket, userExist);
-    }
-    const playerInfo = curUser.playerInfo;
-
-    //await setPlayerInfo(socket, playerInfo)
-
-    gameSession.addUser(nickname);
-    gameSession.transforms[nickname] = curUser.playerInfo.transforms;
-
-    console.log('현재 접속 중인 유저: ', getAllUserNicknames());
-
-    const S_EnterResponse = protoMessages.game.S_EnterResponse;
-    const enterResponse = S_EnterResponse.create({
-      player
-    });
-    sendResponsePacket(socket, PAKCET_DATA.S_EnterResponse, {
-      enterResponse,
-    });
-
-    
-
-  }catch(err){
-    console.error(err);
+  let newPlayer;
+  const existingPlayer = await findUserNickname(nickname);
+  // 새 유저가 아니고 기존 유저인 경우 기존 정보 불러오기
+  if(existingPlayer){
+    newPlayer = existingPlayer;
+  }else{ // 기존유저가 아니고 새 유저인 경우 새로운 사용자 생성 및 DB에 저장.
+    await createUser(
+      null,
+      nickname,
+      jobClass,
+      1,
+      pickJob.maxHp,
+      pickJob.maxMp,
+      pickJob.hp,
+      pickJob.mp,
+      pickJob.atk,
+      pickJob.def,
+      pickJob.magic,
+      pickJob.speed,
+      pickJob.critical,
+      pickJob.critical_attack,
+    );
+    newPlayer = await findUserNickname(nickname);
   };
 
-}
-
-const getUserInfoFromDB = async (socket, nickname, characterClass) => {
-  // DB에서 user, character 정보 가져오기
-  let userInDB = await findUserByUsername(nickname);
-
-  // character 처음 생성하는 거면 character DB에 추가
-  let character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-  if (!character) {
-    await insertCharacter(userInDB, characterClass);
-    character = await findCharacterByUserIdAndClass(userInDB.userId, characterClass);
-  }
-
-  const jobInfo = await getJobInfo(character.jobId);
-  const { baseEffect, singleEffect, wideEffect } = jobInfo;
-  const effectCode = { baseEffect, singleEffect, wideEffect };
-  if (!character || !character.characterId) {
-    throw new Error('Character data is not properly initialized.');
-  }
-
-  // 유저세션에 해당 유저가 존재하면 유저 데이터를 가져오고,
-  // 그렇지 않으면 유저세션, 게임세션에 추가한다.
-  const curUser = await addUser(socket, effectCode, character);
-
-  const statInfo = {
-    level: character.characterLevel,
-    hp: character.curHp,
-    maxHp: character.maxHp,
-    mp: character.curMp,
-    maxMp: character.maxMp,
-    atk: character.attack,
-    def: character.defense,
-    magic: character.magic,
-    speed: character.speed,
-    critRate: character.critical,
-    critDmg: character.criticalAttack,
-    avoidRate: character.avoidAbility,
-    exp: character.experience,
-  };
-
-  const equipment = {
-    weapon: character.weapon,
-    armor: character.armor,
-    gloves: character.gloves,
-    shoes: character.shoes,
-    accessory: character.accessory,
-  };
-
-  const transformInfo = {
-    posX: Math.random() * 18 - 9 + config.town.spawnAreaPos.x, // -9 ~ 9
-    posY: config.town.spawnAreaPos.y,
-    posZ: Math.random() * 16 - 8 + config.town.spawnAreaPos.z, // -8 ~ 8
-    rot: Math.random() * 360, // 0 ~ 360
-  };
-
-  const playerInfo = {
-    playerId: curUser.playerId,
+  const user = new User(
+    socket,
+    newPlayer.id,
     nickname,
-    class: characterClass,
-    gold: character.gold,
-    transform: transformInfo,
-    statInfo,
-    inven,
-    equipment,
-  };
+    // playerInfo
+    newPlayer.maxHp,
+    newPlayer.maxMp,
+    newPlayer.atk,
+    newPlayer.def,
+    newPlayer.magic,
+    newPlayer.speed,
+    newPlayer.critical,
+    newPlayer.critical_attack,
+  );
+  user.job = newPlayer.job;
+  user.level = newPlayer.level;
 
-  curUser.playerInfo = playerInfo;
-  return curUser;
-};
+  //position
+  user.position.posX = 0;
+  user.position.posY = 1;
+  user.position.posZ = 0;
+  user.position.rot = 0;
 
-const getUserInfoFromSession = async (socket, userExist) => {
-  const playerInfo = await getPlayerInfo(socket);
-  userExist.playerInfo = playerInfo;
+  // stat
+  user.stat.hp = newPlayer.hp;
+  user.stat.maxHp = newPlayer.maxHp;
+  user.stat.mp = newPlayer.mp;
+  user.stat.maxMp = newPlayer.maxMp;
+  user.stat.atk = newPlayer.atk;
+  user.stat.def = newPlayer.def;
+  user.stat.magic = newPlayer.magic;
+  user.stat.speed = newPlayer.speed;
+  user.stat.critical = newPlayer.critical;
+  user.stat.critical_attack = newPlayer.critical_attack; 
 
-  return userExist;
-};
+  await addUserAtTown(user);
+
+  const enterData = playerData(user);
+
+  const enterResponse = sendResponsePacket(PACKET_TYPE.S_Enter, {
+    player: enterData,
+  });
+  socket.write(enterResponse);
+
+  const otherPlayers = await getAllUserExceptMyself(user.id);
+
+  // 다른 플레이어가 있을때 새로운 플레이어에게 기존 플레이어들의 정보 전송
+  if(otherPlayers.length > 0){
+    const otherPlayersData = otherPlayers.map((u) => playerData(u));
+
+    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_Spawn, {
+      players: otherPlayersData,
+    });
+    socket.write(spawnResponse);
+  }
+
+  // 기존 플레이어들에게 새로운 플레이어 정보 전송
+  await spawnOtherPlayerHandler(user);
+}
