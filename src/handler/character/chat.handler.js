@@ -5,7 +5,7 @@ import { getAllUsers, getUserById } from '../../sessions/user.session.js';
 import { getGameSession } from '../../sessions/game.session.js';
 import { TOWN_SESSION_ID } from '../../constants/session.js';
 
-export const C_chatHandler = async ({ socket, payload }) => {
+export const ChatHandler = async ({ socket, payload }) => {
     const { playerId, chatContext } = payload;
   
     try {
