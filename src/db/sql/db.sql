@@ -18,7 +18,7 @@ CREATE TABLE `User` (
 );
 
 CREATE TABLE `class` (
-    `class` INT NOT NULL AUTO_INCREMENT,
+    `job` INT NOT NULL AUTO_INCREMENT,
     `JobName` VARCHAR(255) NOT NULL UNIQUE,
     `BaseHp` INT NOT NULL,
     `BaseMp` INT NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `class` (
 
 CREATE TABLE `Character` (
     `playerId` INT NOT NULL AUTO_INCREMENT,
-    `class` INT NOT NULL,
+    `job` INT NOT NULL,
     `UserId` VARCHAR(255) NOT NULL,
     `nickname` VARCHAR(255) NOT NULL UNIQUE,
     `level` INT NOT NULL DEFAULT 1,
