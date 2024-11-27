@@ -5,6 +5,7 @@ import { getAllUsers, getUserById } from '../../sessions/user.session.js';
 import { getGameSession } from '../../sessions/game.session.js';
 import { townSession } from '../../sessions/sessions.js';
 import sendResponsePacket from '../../utils/response/createResponse.js';
+import { PACKET_TYPE } from '../../constants/header.js';
 
 export const ChatHandler = async ({ socket, payload }) => {
     const { playerId, chatContext } = payload;
