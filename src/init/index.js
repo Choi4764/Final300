@@ -7,7 +7,6 @@ const initServer = async () => {
     try {
       await loadProtos();
       await loadGameAssets();
-      console.log(`gameAssets : ${loadGameAssets()}`);
       await testConnection();
 
   } catch (err) {

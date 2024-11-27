@@ -11,9 +11,7 @@ export const enterTownHandler = async ({socket, payload}) => {
 
   const {nickname, class: jobClass} = payload;
 
-  console.error(`ttt ${payload}`);
-
-  const pickJob = getJobById(jobClass);
+  const pickJob = getJobById(1002);
   if (!pickJob) {
     console.error(`존재하지 않는 직업입니다. ${jobClass}`);
     return;
@@ -21,16 +19,15 @@ export const enterTownHandler = async ({socket, payload}) => {
 
   let newPlayer;
   const existingPlayer = await findUserNickname(nickname);
-  console.error(`existingPlayer : ${existingPlayer}`);
   // 새 유저가 아니고 기존 유저인 경우 기존 정보 불러오기
   if(existingPlayer){
     newPlayer = existingPlayer;
   }else{ // 기존유저가 아니고 새 유저인 경우 새로운 사용자 생성 및 DB에 저장.
     await createUser(
-      null,
-      nickname,
-      jobClass,
-      1,
+      pickJob.playerId,//null,  // playerId
+      nickname, // nickname
+      pickJob.id, // job
+      1, // level
       pickJob.maxHp,
       pickJob.maxMp,
       pickJob.hp,

@@ -28,10 +28,6 @@ export const onData = (socket) => (data) => {
 
     // 전체 패킷 크기 = PacketSizeLength(4byte) + packetSize
     const totalPacketLength = config.packet.packetSizeLength + packetSize;
-    console.log(`totalpacketlength : ${totalPacketLength}`);
-    console.log(`config : ${config.packet.packetSizeLength}`);
-    console.log(`packetsize : ${packetSize}`);
-    console.log(`scoketbuffer : ${socket.buffer}`);
     // 버퍼의 길이가 전체 패킷보다 작다면(아직 전체 패킷이 도착하지 않았다면)
     if(socket.buffer.length > totalPacketLength){
       break;

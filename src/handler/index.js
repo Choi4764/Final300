@@ -1,10 +1,16 @@
 import { PACKET_TYPE } from "../constants/header.js";
-import { enterTownHandler } from "./game/enter.handler.js"
+import { enterTownHandler } from "./game/enter.handler.js";
+import { moveHandler } from "./game/move.handler.js";
 
 const Callhandler = {
+  //패킷 타입 추가
     [PACKET_TYPE.C_Enter]: { 
       handler: enterTownHandler,
       packetType: 'game.C_Enter',
+    },
+    [PACKET_TYPE.C_Move]:{
+      handler: moveHandler,
+      packetType: 'game.C_Move',
     },
 }
 

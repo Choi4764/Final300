@@ -177,7 +177,7 @@ CREATE TABLE `Shop` (
 
 
 CREATE TABLE IF NOT EXISTS `characterInfo` (
-    `id`        INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `playerId`        INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `nickname`  VARCHAR(50) NOT NULL UNIQUE,
     `job`     INT NOT NULL,
     `level`     INT NOT NULL,
@@ -187,6 +187,8 @@ CREATE TABLE IF NOT EXISTS `characterInfo` (
     `def`       FLOAT NOT NULL,
     `magic`     FLOAT NOT NULL,
     `speed`     FLOAT NOT NULL,
+    `critical`  FLOAT NOT NULL,
+    `critical_attack`  FLOAT NOT NULL,
     `posX`      FLOAT NOT NULL DEFAULT -4,
     `posY`      FLOAT NOT NULL DEFAULT 0.7,
     `posZ`      FLOAT NOT NULL DEFAULT 137,

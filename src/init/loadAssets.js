@@ -41,7 +41,7 @@ export const getGameAssets = () => {
 };
 
 export const getJobById = (jobId) => {
-    const index = gameAssets.playerCharacter.data.findIndex((job) => job.id === jobId);
-    console.log(`${index}`);
+    const index = gameAssets.playerCharacter.data.findIndex((id) => id.id === jobId);
+
     return gameAssets.playerCharacter.data[index];
 };
