@@ -7,7 +7,7 @@ import { townSession } from '../../sessions/sessions.js';
 import sendResponsePacket from '../../utils/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
-export const C_moveHandler = async ({ socket, payload }) => {
+export const moveHandler = async ({ socket, payload }) => {
     try {
         const { transform } = payload;
         const userId = getUserById(playerId);
