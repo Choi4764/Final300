@@ -1,11 +1,12 @@
-const { InventoryItems, Shop, Character, Items } = require('../../../DB/model/model.js'); // Sequelize 모델 로드
+import { InventoryItems, Shop, Character, Items } from '../../../DB/model/model.js';
+
 
 /**
  * 아이템 장착 핸들러
  * @param {Object} data - 클라이언트로부터 받은 요청 데이터
  * @returns {Object} - 처리 결과를 반환
  */
-const EquipItemHandler = async (data) => {
+export const EquipItemHandler = async (data) => {
     const { playerId, itemId } = data;
 
     if (!playerId || !itemId) {
@@ -78,7 +79,7 @@ const EquipItemHandler = async (data) => {
  * @param {Object} data - 클라이언트로부터 받은 요청 데이터
  * @returns {Object} - 처리 결과를 반환
  */
-const UnequipItemHandler = async (data) => {
+export const UnequipItemHandler = async (data) => {
     const { playerId, itemType } = data;
 
     if (!playerId || !itemType) {
@@ -149,7 +150,7 @@ const UnequipItemHandler = async (data) => {
     }
 };
 
-module.exports = {
+export default {
     EquipItemHandler,
     UnequipItemHandler,
-};
+}

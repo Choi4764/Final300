@@ -1,11 +1,11 @@
-const { InventoryItems, Shop, Character, items } = require('../../../DB/model/model.js')
+import { InventoryItems, Shop, Character, Items } from '../../../DB/model/model.js'; // Sequelize 모델 로드
 
 /**
  * 아이템 구매 핸들러
  * @param {Object} data - 클라이언트로부터 받은 요청 데이터
  * @returns {Object} - 처리 결과를 담은 응답 데이터
  */
-const BuyItemHandler = async (data) => {
+export const BuyItemHandler = async (data) => {
     const { inventoryId, shopId, itemId, quantity } = data;
 
     try {
@@ -70,7 +70,7 @@ const BuyItemHandler = async (data) => {
  * @param {Object} data - 클라이언트로부터 받은 요청 데이터
  * @returns {Object} - 처리 결과를 담은 응답 데이터
  */
-const SellItemHandler = async (data) => {
+export const SellItemHandler = async (data) => {
     const { inventoryId, itemId, quantity } = data;
 
     try {
@@ -124,7 +124,7 @@ const SellItemHandler = async (data) => {
     }
 };
 
-module.exports = {
+export default {
     BuyItemHandler,
     SellItemHandler,
-};
+}
