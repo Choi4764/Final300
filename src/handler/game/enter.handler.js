@@ -9,9 +9,9 @@ import { spawnOtherPlayerHandler } from './spawn.handler.js';
 
 export const enterTownHandler = async ({socket, payload}) => {
 
-  const {nickname, class: jobClass} = payload;
+  const {nickname, job: jobClass} = payload;
 
-  const pickJob = getJobById(1002);
+  const pickJob = getJobById(jobClass);
   if (!pickJob) {
     console.error(`존재하지 않는 직업입니다. ${jobClass}`);
     return;
