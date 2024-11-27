@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { config } from '../env/config.js';
+import { config } from '../../src/config/config.js';
 
 // Sequelize 인스턴스 초기화
 const sequelize = new Sequelize(
@@ -13,23 +13,21 @@ const sequelize = new Sequelize(
     }
 );
 
-const db = {};
-
 // 모델 정의
-db.Potion = sequelize.define('Potion', {
+export const Potion = sequelize.define('Potion', {
     PotionId: { type: DataTypes.STRING, primaryKey: true },
     name: { type: DataTypes.STRING, allowNull: false },
     PotionCost: { type: DataTypes.INTEGER, allowNull: false },
     effect: { type: DataTypes.STRING, allowNull: false },
 }, { timestamps: true });
 
-db.User = sequelize.define('User', {
+export const User = sequelize.define('User', {
     UserId: { type: DataTypes.STRING, primaryKey: true },
     Password: { type: DataTypes.STRING, allowNull: false },
     Email: { type: DataTypes.STRING, allowNull: false },
 }, { timestamps: true });
 
-db.Class = sequelize.define('Class', {
+export const Class = sequelize.define('Class', {
     class: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     JobName: { type: DataTypes.STRING, unique: true, allowNull: false },
     BaseHp: { type: DataTypes.INTEGER, allowNull: false },
@@ -40,7 +38,7 @@ db.Class = sequelize.define('Class', {
     BaseEffect: { type: DataTypes.STRING, allowNull: false },
 }, { timestamps: true });
 
-db.Character = sequelize.define('Character', {
+export const Character = sequelize.define('Character', {
     playerId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     class: { type: DataTypes.INTEGER, allowNull: false },
     UserId: { type: DataTypes.STRING, allowNull: false },
@@ -66,7 +64,7 @@ db.Character = sequelize.define('Character', {
     PartyNumber: { type: DataTypes.INTEGER, allowNull: true },
 }, { timestamps: true });
 
-db.Items = sequelize.define('Items', {
+export const Items = sequelize.define('Items', {
     ItemId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     ItemName: { type: DataTypes.STRING, allowNull: false },
     RequireLevel: { type: DataTypes.INTEGER, allowNull: false },
@@ -79,7 +77,7 @@ db.Items = sequelize.define('Items', {
     ItemCost: { type: DataTypes.INTEGER, allowNull: false },
 }, { timestamps: true });
 
-db.InventoryItems = sequelize.define('InventoryItems', {
+export const InventoryItems = sequelize.define('InventoryItems', {
     InventoryId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     playerId: { type: DataTypes.INTEGER, allowNull: false },
     itemId: { type: DataTypes.INTEGER, allowNull: false },
@@ -87,7 +85,7 @@ db.InventoryItems = sequelize.define('InventoryItems', {
     quantify: { type: DataTypes.INTEGER, allowNull: false },
 }, { timestamps: false });
 
-db.Shop = sequelize.define('Shop', {
+export const Shop = sequelize.define('Shop', {
     ShopId: { type: DataTypes.STRING, primaryKey: true },
     itemId: { type: DataTypes.STRING, allowNull: false },
     PotionId: { type: DataTypes.STRING, allowNull: true },
@@ -95,15 +93,12 @@ db.Shop = sequelize.define('Shop', {
 }, { timestamps: true });
 
 // 관계 설정
-db.Character.belongsTo(db.Class, { foreignKey: 'class' });
-db.Character.belongsTo(db.User, { foreignKey: 'UserId' });
-db.InventoryItems.belongsTo(db.Character, { foreignKey: 'playerId' });
-db.InventoryItems.belongsTo(db.Items, { foreignKey: 'itemId' });
-db.InventoryItems.belongsTo(db.Potion, { foreignKey: 'PotionId' });
-db.Shop.belongsTo(db.Potion, { foreignKey: 'PotionId' });
+Character.belongsTo(Class, { foreignKey: 'class' });
+Character.belongsTo(User, { foreignKey: 'UserId' });
+InventoryItems.belongsTo(Character, { foreignKey: 'playerId' });
+InventoryItems.belongsTo(Items, { foreignKey: 'itemId' });
+InventoryItems.belongsTo(Potion, { foreignKey: 'PotionId' });
+Shop.belongsTo(Potion, { foreignKey: 'PotionId' });
 
-// Sequelize 인스턴스 및 모델 내보내기
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-export default db;
+// Sequelize 인스턴스 내보내기
+export { sequelize as sequelizeInstance };
