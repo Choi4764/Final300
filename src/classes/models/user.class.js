@@ -2,14 +2,14 @@ import Stat from "./stat.class.js";
 import Position from "./position.class.js";
 
 class User{
-    constructor(socket, id, nickname, maxHp, maxMp, ack, def, magic, speed, critical, critical_attack){
+    constructor(socket, id, nickname, maxHp, maxMp, atk, def, magic, speed, critical, critical_attack){
         this.socket = socket;
         this.id = id;
         this.nickname = nickname;
 
         this.playerInfo = {};
 
-        this.position = new Position();
+        this.position = new Position(0, 0, 0, 0);
         // 초기 레벨 1
         this.stat = new Stat(1, maxHp, maxHp, maxMp, maxMp, atk, def, magic, speed, critical, critical_attack);
     }

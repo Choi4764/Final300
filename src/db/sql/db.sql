@@ -1,4 +1,4 @@
-CREATE TABLE `potion` (
+CREATE TABLE IF NOT EXISTS `potion` (
     `PotionId` VARCHAR(255) NOT NULL UNIQUE,
     `name` VARCHAR(255) NOT NULL,
     `PotionCost` INT NOT NULL,
@@ -28,15 +28,15 @@ CREATE TABLE `class` (
     `BaseEffect` VARCHAR(255) NOT NULL,
     `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `UpdatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`class`)
+    PRIMARY KEY (`job`)
 );
 
 
-CREATE TABLE `Character` (
+CREATE TABLE IF NOT EXISTS `character` (
     `playerId` INT NOT NULL AUTO_INCREMENT,
     `job` INT NOT NULL,
     `UserId` VARCHAR(255) NOT NULL,
-    `nickname` VARCHAR(255) NOT NULL UNIQUE,
+    `nickname` VARCHAR(50) NOT NULL UNIQUE,
     `level` INT NOT NULL DEFAULT 1,
     `Exp` INT NOT NULL DEFAULT 0,
     `hp` INT NOT NULL DEFAULT 100,
@@ -59,7 +59,7 @@ CREATE TABLE `Character` (
     `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `UpdatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`playerId`),
-    FOREIGN KEY (`class`) REFERENCES `class`(`class`),
+    FOREIGN KEY (`job`) REFERENCES `class`(`job`),
     FOREIGN KEY (`UserId`) REFERENCES `User`(`UserId`)
 );
 
@@ -76,7 +76,7 @@ CREATE TABLE `items` (
     `ItemCost` INT NOT NULL,
     `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `UpdatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`Key`)
+    PRIMARY KEY (`ItemId`)
 );
 
 CREATE TABLE `effects` (
@@ -85,7 +85,7 @@ CREATE TABLE `effects` (
     `EffectType` VARCHAR(255) NOT NULL,
     `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `UpdatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`Key`)
+    PRIMARY KEY (`effectsId`)
 );
 
 CREATE TABLE `monsters` (
@@ -160,7 +160,7 @@ CREATE TABLE `InventoryItems` (
     `quantify` INT NOT NULL,
     PRIMARY KEY (`InventoryId`),
     FOREIGN KEY (`playerId`) REFERENCES `Character`(`playerId`),
-    FOREIGN KEY (`itemId`) REFERENCES `items`(`Key`),
+    FOREIGN KEY (`itemId`) REFERENCES `items`(`ItemId`),
     FOREIGN KEY (`PotionId`) REFERENCES `potion`(`PotionId`)
 );
 
@@ -176,10 +176,27 @@ CREATE TABLE `Shop` (
 );
 
 
+CREATE TABLE IF NOT EXISTS `characterInfo` (
+    `id`        INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `nickname`  VARCHAR(50) NOT NULL UNIQUE,
+    `job`     INT NOT NULL,
+    `level`     INT NOT NULL,
+    `maxHp`     FLOAT NOT NULL,
+    `maxMp`     FLOAT NOT NULL,
+    `atk`       FLOAT NOT NULL,
+    `def`       FLOAT NOT NULL,
+    `magic`     FLOAT NOT NULL,
+    `speed`     FLOAT NOT NULL,
+    `posX`      FLOAT NOT NULL DEFAULT -4,
+    `posY`      FLOAT NOT NULL DEFAULT 0.7,
+    `posZ`      FLOAT NOT NULL DEFAULT 137,
+    `rot`       FLOAT NOT NULL DEFAULT 0
+);
+
 --class 데이터 삽입
-INSERT INTO class (`class`, `JobName`, `BaseHp`, `BaseMp`, `BaseAttack`, `BaseDefense`, `BaseMagic`, `BaseEffect`) VALUE
-(1001, "섭르탄", 3, 3, 3, 1, 3, 3004),
-(1002, "클르탄", 1, 5, 1, 1, 5, 3004),
-(1003, "디르탄", 2, 1, 2, 2, 1, 3004),
-(1004, "큐르탄", 4, 0, 2, 4, 0, 3004),
-(1005, "기르탄", 1, 5, 1, 1, 3, 3004);
+-- INSERT INTO class (`class`, `JobName`, `BaseHp`, `BaseMp`, `BaseAttack`, `BaseDefense`, `BaseMagic`, `BaseEffect`) VALUE
+-- (1001, "섭르탄", 3, 3, 3, 1, 3, 3004),
+-- (1002, "클르탄", 1, 5, 1, 1, 5, 3004),
+-- (1003, "디르탄", 2, 1, 2, 2, 1, 3004),
+-- (1004, "큐르탄", 4, 0, 2, 4, 0, 3004),
+-- (1005, "기르탄", 1, 5, 1, 1, 3, 3004);

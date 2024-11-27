@@ -9,8 +9,8 @@ const Callhandler = {
 }
 
 export const getHandlerByPacketType = (packetType) => {
-    if (!Callhandler[packetType] || !handler[packetType].handler) {
-      console.error(`handler not found ${packetType}`);
+    if (!Callhandler[packetType] || !Callhandler[packetType].handler) {
+      console.error(`handler not found id : ${packetType}`);
     }else{
       console.log(`find handler ${packetType}`);
     };
