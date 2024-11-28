@@ -1,31 +1,21 @@
-import { createUser, findUserNickname } from "../../db/user/user.db.js";
-import User from "../../classes/models/user.class.js";
-import { PACKET_TYPE } from "../../constants/header.js";
-import { getJobById } from "../../init/loadAssets.js";
-import { addUserAtTown, getAllUserExceptMyself } from "../../sessions/town.session.js";
-import { playerData } from "../../utils/packet/playerPacket.js";
-import sendResponsePacket from "../../utils/response/createResponse.js";
-import { spawnOtherPlayerHandler } from "./spawn.handler.js";
+import { createUser, findUserNickname } from '../../db/user/user.db.js';
+import User from '../../classes/models/user.class.js';
+import { PACKET_TYPE } from '../../constants/header.js';
+import { getJobById } from '../../init/loadAssets.js';
+import { addUserAtTown, getAllUserExceptMyself } from '../../sessions/town.session.js';
+import { playerData } from '../../utils/packet/playerPacket.js';
+import sendResponsePacket from '../../utils/response/createResponse.js';
+import { spawnOtherPlayerHandler } from './spawn.handler.js';
 
-/*
-
-//request
-message C_Enter{
-  string nickname = 1;
-  int32 class = 2;
-}
-
-//response
-message S_Enter {
-  PlayerInfo player = 1;
-}
-
-*/
 export const enterTownHandler = async ({socket, payload}) => {
 
-  const {nickname, class: jobClass} = payload;
+  const {nickname, job: jobClass} = payload;
 
   const pickJob = getJobById(jobClass);
+  if (!pickJob) {
+    console.error(`존재하지 않는 직업입니다. ${jobClass}`);
+    return;
+  }
 
   let newPlayer;
   const existingPlayer = await findUserNickname(nickname);
@@ -34,10 +24,10 @@ export const enterTownHandler = async ({socket, payload}) => {
     newPlayer = existingPlayer;
   }else{ // 기존유저가 아니고 새 유저인 경우 새로운 사용자 생성 및 DB에 저장.
     await createUser(
-      null,
-      nickname,
-      jobClass,
-      1,
+      pickJob.playerId,//null,  // playerId
+      nickname, // nickname
+      pickJob.id, // job
+      1, // level
       pickJob.maxHp,
       pickJob.maxMp,
       pickJob.hp,
@@ -94,7 +84,12 @@ export const enterTownHandler = async ({socket, payload}) => {
   const enterResponse = sendResponsePacket(PACKET_TYPE.S_Enter, {
     player: enterData,
   });
+
+  
   socket.write(enterResponse);
+  if(enterResponse){
+    console.log(`!!send response!! ${enterResponse}`);
+  }
 
   const otherPlayers = await getAllUserExceptMyself(user.id);
 

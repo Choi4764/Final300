@@ -1,4 +1,3 @@
-import { PACKET_TYPE } from '../../constants/header.js';
 import { getProtoMessagesById } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js'
 

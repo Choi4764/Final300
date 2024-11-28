@@ -3,9 +3,9 @@ import { packetParser } from '../utils/parser/packetParser.js';
 import { getHandlerByPacketType } from '../handler/index.js';
 
 export const onData = (socket) => (data) => {
+
   // 기존 socket.buffer에 data를 넣겠다.
   socket.buffer = Buffer.concat([socket.buffer, data]);
-  console.log('dmddo');
   // 무한루프 반복문
   while(true){
     // 버퍼의 길이가 최소 패킷 크기보다 작다면
@@ -18,6 +18,7 @@ export const onData = (socket) => (data) => {
     // PacketSize 읽기(리틀 엔디안, PacketSize = 4byte)
     const packetSize = socket.buffer.readUInt32LE(offset);
     offset += config.packet.packetSizeLength;
+    
     // 패킷사이즈가 0보다 작을 때 유효성검사
     if(packetSize <= 0){
       console.error(`Invalid packet size: ${packetSize}`);
@@ -28,10 +29,9 @@ export const onData = (socket) => (data) => {
     // 전체 패킷 크기 = PacketSizeLength(4byte) + packetSize
     const totalPacketLength = config.packet.packetSizeLength + packetSize;
     // 버퍼의 길이가 전체 패킷보다 작다면(아직 전체 패킷이 도착하지 않았다면)
-    if(socket.buffer.length < totalPacketLength){
+    if(socket.buffer.length > totalPacketLength){
       break;
     }
-
     // PacketId 읽기(PacketId = 1byte)
     const packetId = socket.buffer.readUInt8(offset);
     offset += config.packet.packetIdLength;
@@ -57,7 +57,6 @@ export const onData = (socket) => (data) => {
 
       if(handler){
         handler({socket, payload: messageData});
-        console.log(`handler found ${packetId}`);
       }else{
         console.error(`Handler not found: PacketId ${packetId}`);
       }
