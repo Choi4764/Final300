@@ -32,7 +32,7 @@ const createSuccessResponse = (token) => ({
   failCode: config.GlobalFailCode.NONE,
 });
 
-export const loginHandler = async ({ packetType, data, socket }) => {
+export const LoginHandler = async ({ packetType, data, socket }) => {
   try {
     const { id, password } = await schema.validateAsync(data);
     console.log('login id : ', id);

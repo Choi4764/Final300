@@ -1,8 +1,8 @@
 import net from 'net';
-import { onConnection } from './events/onConnection.js';
-
-import initServer from './init/index.js'; 
 import { config } from './config/config.js';
+import { PORT, HOST } from './constants/env.js';
+import { onConnection } from './events/onConnection.js';
+import initServer from './init/index.js';
 
 const server = net.createServer(onConnection);
 
