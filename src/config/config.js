@@ -1,7 +1,6 @@
 import {PORT, HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} from '../constants/env.js'
 import { PACKET_HEADER_LENGTH, PACKET_ID_LENGTH, PACKET_SIZE_LENGTH } from '../constants/header.js'
-
-import { TOWN_SESSION_ID } from '../constants/session.js'
+import { townSession } from '../sessions/sessions.js'
 
 export const config = {
     server: {
@@ -23,6 +22,6 @@ export const config = {
     },
 
     session: {
-        townId: TOWN_SESSION_ID,
+        townId: townSession,
     },
 }

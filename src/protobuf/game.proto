@@ -119,23 +119,23 @@ message S_LoginRequest{
     string token = 3;
     GlobalFailCode failCode = 4;
 }
-message C_Enter{
+message C_EnterRequest{
     string nickname = 1;
     int32 job = 2;
 }
-message S_Enter{
+message S_EnterResponse{
     PlayerInfo player = 1;
 }
-message S_Spawn{
+message S_SpawnNotification{
     repeated PlayerInfo players = 1;
 }
-message S_Despawn{
+message S_DespawnNotification{
     repeated int32 playerIds = 1;
 }
-message C_Move{
+message C_MoveRequest{
     TransformInfo transform = 1;
 }
-message S_Move{
+message S_MoveResponse{
     int32 playerId = 1;
     TransformInfo transform = 2;
 }

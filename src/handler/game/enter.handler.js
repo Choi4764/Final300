@@ -21,18 +21,18 @@ message S_Enter {
 }
 
 */
-export const enterTownHandler = async ({socket, payload}) => {
+export const enterTownHandler = async ({ socket, payload }) => {
 
-  const {nickname, class: jobClass} = payload;
+  const { nickname, class: jobClass } = payload;
 
   const pickJob = getJobById(jobClass);
 
   let newPlayer;
   const existingPlayer = await findUserNickname(nickname);
   // 새 유저가 아니고 기존 유저인 경우 기존 정보 불러오기
-  if(existingPlayer){
+  if (existingPlayer) {
     newPlayer = existingPlayer;
-  }else{ // 기존유저가 아니고 새 유저인 경우 새로운 사용자 생성 및 DB에 저장.
+  } else { // 기존유저가 아니고 새 유저인 경우 새로운 사용자 생성 및 DB에 저장.
     await createUser(
       null,
       nickname,
@@ -85,13 +85,13 @@ export const enterTownHandler = async ({socket, payload}) => {
   user.stat.magic = newPlayer.magic;
   user.stat.speed = newPlayer.speed;
   user.stat.critical = newPlayer.critical;
-  user.stat.critical_attack = newPlayer.critical_attack; 
+  user.stat.critical_attack = newPlayer.critical_attack;
 
   await addUserAtTown(user);
 
   const enterData = playerData(user);
 
-  const enterResponse = sendResponsePacket(PACKET_TYPE.S_Enter, {
+  const enterResponse = sendResponsePacket(PACKET_TYPE.S_EnterResponse, {
     player: enterData,
   });
   socket.write(enterResponse);
@@ -99,10 +99,10 @@ export const enterTownHandler = async ({socket, payload}) => {
   const otherPlayers = await getAllUserExceptMyself(user.id);
 
   // 다른 플레이어가 있을때 새로운 플레이어에게 기존 플레이어들의 정보 전송
-  if(otherPlayers.length > 0){
+  if (otherPlayers.length > 0) {
     const otherPlayersData = otherPlayers.map((u) => playerData(u));
 
-    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_Spawn, {
+    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_SpawnNotification, {
       players: otherPlayersData,
     });
     socket.write(spawnResponse);
