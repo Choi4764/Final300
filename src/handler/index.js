@@ -14,8 +14,8 @@ const  CallHandler = {
 /*    //회원가입 및 로그인
     [PACKET_TYPE.C_registerRequest]: { handler: RegisterHandler },
     [PACKET_TYPE.C_loginRequest]: { handler: LoginHandler },
-*/      
-    [PACKET_TYPE.C_chatHandler]: { handler: ChatHandler },
+*/  
+    [PACKET_TYPE.C_ChatHandler]: { handler: ChatHandler },    
     [PACKET_TYPE.C_BuyItemRequest]:{ handler: BuyItemHandler },
     [PACKET_TYPE.C_SellItemRequest]:{ handler: SellItemHandler },
     [PACKET_TYPE.C_EquipItemRequest]:{ handler: EquipItemHandler },

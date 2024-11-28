@@ -13,8 +13,9 @@ export const spawnOtherPlayerHandler = async (newUser) => {
 
     const newPlayerData = playerData(newUser);
 
-    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_Spawn, {
+    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_SpawnNotification, {
         players: [newPlayerData]
+
     });
     // 다른플레이어 정보가 있으면 spawnResponse전송
     for(const user of otherPlayers){
