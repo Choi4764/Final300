@@ -8,9 +8,9 @@ import { RegisterHandler } from './user/registerHandler.js';
 import { LoginHandler } from './user/loginHandler.js';
 */
 //패킷 타입이 핸들러를 호출 할 수 있게 연결함
-const  CallHandler = {
-    [PACKET_TYPE.C_EnterRequest]: { handler: enterTownHandler, packetType: 'game.C_Enter'},
-    [PACKET_TYPE.C_Move]:{ handler: moveHandler, packetType: 'game.C_Move' },
+const  Callhandler = {
+    [PACKET_TYPE.C_EnterRequest]: { handler: enterTownHandler, packetType: 'game.C_EnterRequest'},
+    [PACKET_TYPE.C_MoveRequest]:{ handler: moveHandler, packetType: 'game.C_MoveResponse' },
 /*    //회원가입 및 로그인
     [PACKET_TYPE.C_registerRequest]: { handler: RegisterHandler },
     [PACKET_TYPE.C_loginRequest]: { handler: LoginHandler },

@@ -1,9 +1,4 @@
-import { config } from '../../config/config.js';
-import { getProtoTypeNameByHandlerId } from '../../handler/index.js';
-import { getProtoMessages } from '../../init/loadProtos.js';
-import CustomError from '../error/customError.js';
-import { ErrorCodes } from '../error/errorCodes.js';
-import { PACKET_TYPE } from '../../constants/header.js';
+import { getProtoMessagesById } from '../../init/loadProtos.js';
 
 export const packetParser = (packetId, data) => {
   // packetId로 messageType가져오기
@@ -22,5 +17,5 @@ export const packetParser = (packetId, data) => {
     throw e;
   }
 
-  return { payload };
+  return messageData;
 };

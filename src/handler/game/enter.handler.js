@@ -81,7 +81,7 @@ export const enterTownHandler = async ({socket, payload}) => {
 
   const enterData = playerData(user);
 
-  const enterResponse = sendResponsePacket(PACKET_TYPE.S_Enter, {
+  const enterResponse = sendResponsePacket(PACKET_TYPE.S_EnterResponse, {
     player: enterData,
   });
 
@@ -97,7 +97,7 @@ export const enterTownHandler = async ({socket, payload}) => {
   if(otherPlayers.length > 0){
     const otherPlayersData = otherPlayers.map((u) => playerData(u));
 
-    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_Spawn, {
+    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_SpawnNotification, {
       players: otherPlayersData,
     });
     socket.write(spawnResponse);

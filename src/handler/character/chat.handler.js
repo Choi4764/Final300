@@ -1,18 +1,19 @@
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
-import { getAllUsers, getUserById } from '../../sessions/user.session.js';
+import { getAllUsers, getUserByUserId } from '../../sessions/user.session.js';
 import { getGameSession } from '../../sessions/game.session.js';
-import { TOWN_SESSION_ID } from '../../constants/session.js';
+import { townSession } from '../../sessions/sessions.js';
+import sendResponsePacket from '../../utils/response/createResponse.js';
 
 export const ChatHandler = async ({ socket, payload }) => {
     const { playerId, chatContext } = payload;
   
     try {
-        const sender = await getUserById(playerId);
+        const sender = await getUserByUserId(playerId);
         if (!sender) throw new Error('player not found');
 
-        const gameSession = getGameSession(TOWN_SESSION_ID);
+        const gameSession = getGameSession(townSession);
         if(!gameSession) throw new Error('session not found');
 
         if(chatContext[0] === '/'){
@@ -30,7 +31,7 @@ export async function chatAll(sender, context) {
     try{
         const allUsers = getAllUsers();
 
-        const chatResponse = createResponse('response', 'S_ChatResponse', {
+        const chatResponse = sendResponsePacket('response', 'S_ChatResponse', {
           playerId: sender.playerId,
           chatContext: `${sender.nickname}: ${context}`
         });

@@ -37,7 +37,7 @@ export const moveHandler = async({socket, payload}) => {
         },
     };
 
-    const moveResponse = sendResponsePacket(PACKET_TYPE.S_Move,{
+    const moveResponse = sendResponsePacket(PACKET_TYPE.S_MoveResponse,{
         playerMove,
     });
 
