@@ -43,6 +43,5 @@ async function chatAll(sender, context) {
 
 
   } catch (error) {
-    console.log(error)
   }
 };

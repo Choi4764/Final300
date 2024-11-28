@@ -15,8 +15,8 @@ export const PACKET_TYPE = {
     C_AnimationRequest: 8,
     S_AnimationResponse: 9,
 
-    C_ChatRequest: 20,
-    S_ChatResponse: 21,
+    C_ChatRequest: 12,
+    S_ChatResponse: 13,
 
     C_EquipItemRequest: 41,
     S_EquipItemResponse: 42,
