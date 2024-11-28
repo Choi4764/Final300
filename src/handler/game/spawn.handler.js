@@ -8,13 +8,14 @@ import sendResponsePacket from "../../utils/response/createResponse.js";
 //     repeated PlayerInfo players = 1;
 // }
 
-export const spawnOtherPlayerHandler = async () => {
+export const spawnOtherPlayerHandler = async (newUser) => {
     const otherPlayers = await getAllUserExceptMyself(newUser.id);
 
     const newPlayerData = playerData(newUser);
 
     const spawnResponse = sendResponsePacket(PACKET_TYPE.S_SpawnNotification, {
-        players: newPlayerData
+        players: [newPlayerData]
+
     });
     // 다른플레이어 정보가 있으면 spawnResponse전송
     for(const user of otherPlayers){
