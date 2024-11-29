@@ -21,19 +21,20 @@ const  Callhandler = {
     [PACKET_TYPE.C_EquipItemRequest]:{ handler: EquipItemHandler },
     [PACKET_TYPE.C_UnequipItemRequest]:{ handler: UnequipItemHandler },
 
+
 }
 
 export const getHandlerByPacketType = (packetType) => {
-    if (!Callhandler[packetType] || !Callhandler[packetType].handler) {
-      console.error(`handler not found id : ${packetType}`);
-    }else{
-      console.log(`find handler ${packetType}`);
+    if (!CallHandler[packetType] || !CallHandler[packetType].handler) {
+        console.error(`handler not found id : ${packetType}`);
+    } else {
+        console.log(`find handler ${packetType}`);
     };
-    return Callhandler[packetType].handler;
+    return CallHandler[packetType].handler;
 };
 
 export const getProtoTypeNameByHandlerId = (packetType) => {
-    if (!CallHandlers[packetType]) {
+    if (!CallHandler[packetType]) {
         throw Error();
     }
     return handlers[packetType].protoType;
