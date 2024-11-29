@@ -26,7 +26,7 @@ export const packetNames = {
         C_LoginRequest: 'game.C_LoginRequest',
         S_LoginRequest: 'game.S_LoginRequest',
         C_EnterRequest: 'game.C_EnterRequest',
-        S_EnterResponse: 'game.S_EnterRequest',
+        S_EnterResponse: 'game.S_EnterResponse',
         S_SpawnNotification: 'game.S_SpawnNotification',
         S_DespawnNotification: 'game.S_DespawnNotification',
         C_MoveRequest: 'game.C_MoveRequest',

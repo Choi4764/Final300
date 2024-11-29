@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { Sequelize , DataTypes } from 'sequelize';
 import { config } from '../../src/config/config.js';
 
 // Sequelize 인스턴스 초기화
