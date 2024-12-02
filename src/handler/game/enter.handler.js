@@ -6,6 +6,8 @@ import { addUserAtTown, getAllUserExceptMyself } from '../../sessions/town.sessi
 import { playerData } from '../../utils/packet/playerPacket.js';
 import sendResponsePacket from '../../utils/response/createResponse.js';
 import { spawnOtherPlayerHandler } from './spawn.handler.js';
+import { userSessions } from '../../sessions/sessions.js';
+import { addUser } from '../../sessions/user.session.js';
 
 /*
 
@@ -92,6 +94,12 @@ export const enterTownHandler = async ({ socket, payload }) => {
   user.stat.critical_attack = newPlayer.critical_attack;
 
   await addUserAtTown(user);
+
+  //usersession에 유저가 없으면 사용자 추가
+  const userInSession = userSessions.find((users) => users.id === user.id);
+  if(!userInSession){
+    await addUser(user);
+  }
 
   const enterData = playerData(user);
 
