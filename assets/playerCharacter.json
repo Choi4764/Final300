@@ -3,9 +3,8 @@
     "version": "1.0.0",
     "data": [
         {
-            "__섭르탄__": "하이브리드 창술사",
-            "playerId": "1001",
-            "job": 1001,
+            "display name":"섭르탄",
+            "description": "하이브리드 창술사",
             "id": 1001,
             "maxHp" : 3,
             "maxMp" : 2,
@@ -19,9 +18,8 @@
             "critical_attack": 2
         },
         {
-            "__클르탄__": "올라운드 검사",
-            "playerId": "1002",
-            "job": 1002,
+            "display name": "클르탄",
+            "description": "올라운드 검사",
             "id": 1002,
             "maxHp" : 1,
             "maxMp" : 2,
@@ -35,9 +33,8 @@
             "critical_attack": 2
         },
         {
-            "__디르탄__": "속도특화 궁수",
-            "playerId": "1003",
-            "job": 1003,
+            "display name": "디르탄",
+            "description": "속도특화 궁수",
             "id": 1003,
             "maxHp" : 2,
             "maxMp" : 2,
@@ -51,9 +48,8 @@
             "critical_attack": 2
         },
         {
-            "__큐르탄__": "전사",
-            "playerId": "1004",
-            "job": 1004,
+            "display name": "큐르탄",
+            "description": "전사",
             "id": 1004,
             "maxHp" : 4,
             "maxMp" : 2,
@@ -67,9 +63,8 @@
             "critical_attack": 2
         },
         {
-            "__기르탄__": "마법사",
-            "playerId": "1005",
-            "job": 1005,
+            "display name" : "기르탄",
+            "description" : "마법사",
             "id": 1005,
             "maxHp" : 1,
             "maxMp" : 2,
