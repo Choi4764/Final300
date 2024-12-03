@@ -9,6 +9,7 @@ import { RegisterHandler } from './user/registerHandler.js';
 import { LoginHandler } from './user/loginHandler.js';
 */
 //패킷 타입이 핸들러를 호출 할 수 있게 연결함
+
 const  CallHandler = {
     [PACKET_TYPE.C_EnterRequest]: { handler: enterTownHandler },
     [PACKET_TYPE.C_MoveRequest]:{ handler: moveHandler, },
@@ -18,12 +19,12 @@ const  CallHandler = {
     [PACKET_TYPE.C_registerRequest]: { handler: RegisterHandler },
     [PACKET_TYPE.C_loginRequest]: { handler: LoginHandler },
 */      
-    [PACKET_TYPE.C_ChatHandler]: { handler: ChatHandler },
+
+    [PACKET_TYPE.C_ChatRequest]: { handler: ChatHandler },
     [PACKET_TYPE.C_BuyItemRequest]:{ handler: BuyItemHandler },
     [PACKET_TYPE.C_SellItemRequest]:{ handler: SellItemHandler },
     [PACKET_TYPE.C_EquipItemRequest]:{ handler: EquipItemHandler },
     [PACKET_TYPE.C_UnequipItemRequest]:{ handler: UnequipItemHandler },
-
 
 }
 

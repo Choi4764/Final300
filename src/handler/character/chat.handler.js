@@ -8,10 +8,10 @@ import sendResponsePacket from '../../utils/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
 export const ChatHandler = async ({ socket, payload }) => {
-  const { nickname, chatContext } = payload;
+  const { playerId, chatContext } = payload;
 
   try {
-    const sender = await getUserByNickname(nickname);
+    const sender = await getUserById(playerId);
     if (!sender) throw new Error('player not found');
 
     const gameSession = getGameSession(townSession);
@@ -33,7 +33,7 @@ async function chatAll(sender, context) {
     const allUsers = getAllUsers();
 
     const chatResponse = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
-      nickname: sender.nickname,
+      playerId: sender.playerId,
       chatContext: `[전체] ${sender.nickname}: ${context}`
     });
 
