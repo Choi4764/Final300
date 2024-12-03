@@ -1,0 +1,81 @@
+{
+    "name": "PlayerClass",
+    "version": "1.0.0",
+    "data": [
+        {
+            "display name":"섭르탄",
+            "description": "하이브리드 창술사",
+            "id": 1001,
+            "maxHp" : 3,
+            "maxMp" : 2,
+            "hp" : 2,
+            "mp" : 2,
+            "def": 1,
+            "atk": 3,
+            "magic": 3,
+            "speed": 3,
+            "critical": 1,
+            "critical_attack": 2
+        },
+        {
+            "display name": "클르탄",
+            "description": "올라운드 검사",
+            "id": 1002,
+            "maxHp" : 1,
+            "maxMp" : 2,
+            "hp" : 2,
+            "mp" : 2,
+            "def": 1,
+            "atk": 1,
+            "magic": 5,
+            "speed": 3,
+            "critical": 1,
+            "critical_attack": 2
+        },
+        {
+            "display name": "디르탄",
+            "description": "속도특화 궁수",
+            "id": 1003,
+            "maxHp" : 2,
+            "maxMp" : 2,
+            "hp" : 2,
+            "mp" : 2,
+            "def": 2,
+            "atk": 2,
+            "magic": 1,
+            "speed": 4,
+            "critical": 1,
+            "critical_attack": 2
+        },
+        {
+            "display name": "큐르탄",
+            "description": "전사",
+            "id": 1004,
+            "maxHp" : 4,
+            "maxMp" : 2,
+            "hp" : 2,
+            "mp" : 2,
+            "def": 4,
+            "atk": 2,
+            "magic": 0,
+            "speed": 1,
+            "critical": 1,
+            "critical_attack": 2
+        },
+        {
+            "display name" : "기르탄",
+            "description" : "마법사",
+            "id": 1005,
+            "maxHp" : 1,
+            "maxMp" : 2,
+            "hp" : 2,
+            "mp" : 2,
+            "def": 1,
+            "atk": 1,
+            "magic": 3,
+            "speed": 5,
+            "critical": 1,
+            "critical_attack": 2
+        }
+    ]
+}
