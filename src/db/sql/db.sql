@@ -169,7 +169,7 @@ CREATE TABLE `Shop` (
 
 
 -- class 데이터 삽입
-INSERT INTO class (`class`, `JobName`, `BaseHp`, `BaseMp`, `BaseAttack`, `BaseDefense`, `BaseMagic`, `BaseEffect`) VALUE
+INSERT INTO class (`job`, `JobName`, `BaseHp`, `BaseMp`, `BaseAttack`, `BaseDefense`, `BaseMagic`, `BaseEffect`) VALUE
 (1001, "섭르탄", 3, 3, 3, 1, 3, 3004),
 (1002, "클르탄", 1, 5, 1, 1, 5, 3004),
 (1003, "디르탄", 2, 1, 2, 2, 1, 3004),
