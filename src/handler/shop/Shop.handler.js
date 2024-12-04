@@ -1,4 +1,22 @@
-import { InventoryItems, Shop, Character, Items } from '../../db/model/model.js'; // Sequelize 모델 로드
+import { InventoryItems, Shop, CharacterInfo } from '../../../db/model/model.js'; // Sequelize 모델 로드
+import fs from 'fs/promises'; // 파일 읽기를 위해 fs 모듈 사용
+import path from 'path'; // 경로 조작을 위해 path 모듈 사용
+
+let itemData = [];
+
+// 애플리케이션 시작 시 items.json 로드
+(async () => {
+    try {
+        // items.json의 절대 경로를 계산
+        const itemsFilePath = path.resolve(__dirname, '../../../../assets/items.json');
+        const data = await fs.readFile(itemsFilePath, 'utf-8'); // JSON 파일 읽기
+        const parsedData = JSON.parse(data);
+        itemData = parsedData.data; // "data" 배열에서 아이템 정보를 가져옴
+        console.log('Items loaded successfully');
+    } catch (error) {
+        console.error('Failed to load items.json:', error);
+    }
+})();
 
 /**
  * 아이템 구매 핸들러
@@ -6,23 +24,19 @@ import { InventoryItems, Shop, Character, Items } from '../../db/model/model.js'
  * @returns {Object} - 처리 결과를 담은 응답 데이터
  */
 export const BuyItemHandler = async (data) => {
-    const { inventoryId, shopId, itemId, quantity } = data;
+    const { playerId, itemName, quantity } = data;
 
     try {
-        // 1. 상점에서 아이템 정보 가져오기
-        const shopItem = await Shop.findOne({ where: { ShopId: shopId, itemId } });
-        if (!shopItem) {
-            return { success: false, message: '아이템이 상점에 없습니다.' };
+        // 1. items.json에서 아이템 정보 가져오기
+        const item = itemData.find(i => i.ItemName === itemName);
+        if (!item) {
+            return { success: false, message: '아이템을 찾을 수 없습니다.' };
         }
 
-        const itemCost = shopItem.cost * quantity;
+        const itemCost = item.ItemCost * quantity;
 
-        // 2. 인벤토리에서 골드 확인
-        const inventory = await InventoryItems.findOne({ where: { InventoryId: inventoryId } });
-        if (!inventory) {
-            return { success: false, message: '인벤토리를 찾을 수 없습니다.' };
-        }
-        const player = await Character.findOne({ where: { playerId: inventory.playerId } });
+        // 2. 플레이어 정보 가져오기
+        const player = await CharacterInfo.findOne({ where: { playerId } });
         if (!player) {
             return { success: false, message: '플레이어를 찾을 수 없습니다.' };
         }
@@ -32,13 +46,13 @@ export const BuyItemHandler = async (data) => {
         }
 
         // 3. 골드 차감 및 인벤토리 업데이트
-        await Character.update(
+        await CharacterInfo.update(
             { gold: player.gold - itemCost },
             { where: { playerId: player.playerId } }
         );
 
         const existingItem = await InventoryItems.findOne({
-            where: { InventoryId: inventoryId, itemId },
+            where: { nickname: player.nickname, itemId: item.ItemId },
         });
 
         if (existingItem) {
@@ -50,15 +64,14 @@ export const BuyItemHandler = async (data) => {
         } else {
             // 인벤토리에 없으면 새로 추가
             await InventoryItems.create({
-                InventoryId: inventoryId,
-                playerId: inventory.playerId,
-                itemId,
+                nickname: player.nickname,
+                itemId: item.ItemId,
                 PotionId: null, // 일반 아이템이므로 PotionId는 null
                 quantify: quantity,
             });
         }
 
-        return { success: true, message: '아이템 구매 성공!', itemId, quantity };
+        return { success: true, message: '아이템 구매 성공!', itemName, quantity };
     } catch (error) {
         console.error(error);
         return { success: false, message: '서버 에러가 발생했습니다.' };
@@ -71,41 +84,38 @@ export const BuyItemHandler = async (data) => {
  * @returns {Object} - 처리 결과를 담은 응답 데이터
  */
 export const SellItemHandler = async (data) => {
-    const { inventoryId, itemId, quantity } = data;
+    const { playerId, itemName, quantity } = data;
 
     try {
-        // 1. 인벤토리에서 아이템 확인
+        // 1. items.json에서 아이템 정보 가져오기
+        const item = itemData.find(i => i.ItemName === itemName);
+        if (!item) {
+            return { success: false, message: '아이템 정보를 찾을 수 없습니다.' };
+        }
+
+        // 2. 플레이어 정보 가져오기
+        const player = await CharacterInfo.findOne({ where: { playerId } });
+        if (!player) {
+            return { success: false, message: '플레이어를 찾을 수 없습니다.' };
+        }
+
+        // 3. 인벤토리에서 아이템 확인
         const inventoryItem = await InventoryItems.findOne({
-            where: { InventoryId: inventoryId, itemId },
+            where: { nickname: player.nickname, itemId: item.ItemId },
         });
         if (!inventoryItem || inventoryItem.quantify < quantity) {
             return { success: false, message: '아이템 수량이 부족합니다.' };
         }
 
-        // 2. 아이템 정보에서 판매 가격 가져오기
-        const item = await items.findOne({ where: { Key: itemId } });
-        if (!item) {
-            return { success: false, message: '아이템 정보를 찾을 수 없습니다.' };
-        }
-
         const sellPrice = item.ItemCost * quantity;
 
-        // 3. 플레이어의 골드 증가
-        const inventory = await InventoryItems.findOne({ where: { InventoryId: inventoryId } });
-        if (!inventory) {
-            return { success: false, message: '인벤토리를 찾을 수 없습니다.' };
-        }
-        const player = await Character.findOne({ where: { playerId: inventory.playerId } });
-        if (!player) {
-            return { success: false, message: '플레이어를 찾을 수 없습니다.' };
-        }
-
-        await Character.update(
+        // 4. 플레이어의 골드 증가
+        await CharacterInfo.update(
             { gold: player.gold + sellPrice },
             { where: { playerId: player.playerId } }
         );
 
-        // 4. 인벤토리에서 아이템 수량 감소 또는 제거
+        // 5. 인벤토리에서 아이템 수량 감소 또는 제거
         if (inventoryItem.quantify === quantity) {
             // 수량이 정확히 맞으면 삭제
             await InventoryItems.destroy({ where: { InventoryId: inventoryItem.InventoryId } });
@@ -117,7 +127,7 @@ export const SellItemHandler = async (data) => {
             );
         }
 
-        return { success: true, message: '아이템 판매 성공!', itemId, quantity, sellPrice };
+        return { success: true, message: '아이템 판매 성공!', itemName, quantity, sellPrice };
     } catch (error) {
         console.error(error);
         return { success: false, message: '서버 에러가 발생했습니다.' };
@@ -127,4 +137,4 @@ export const SellItemHandler = async (data) => {
 export default {
     BuyItemHandler,
     SellItemHandler,
-}
+};

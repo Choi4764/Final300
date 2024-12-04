@@ -1,0 +1,40 @@
+{
+    "name": "Items",
+    "version": "1.0.0",
+    "data": [
+        {
+            "ItemName": "테스트 투구",
+            "RequireLevel": 1,
+            "ItemType": "Head",
+            "ItemHp": 50,
+            "ItemMp": 0,
+            "ItemAttack": 10,
+            "ItemDefense": 30,
+            "ItemMagic": 0,
+           
+            "ItemCost": 500
+        },
+        {
+            "ItemName": "테스트 부츠",
+            "RequireLevel": 1,
+            "ItemType": "Leg",
+            "ItemHp": 20,
+            "ItemMp": 0,
+            "ItemAttack": 5,
+            "ItemDefense": 10,
+            "ItemMagic": 0,
+            "ItemCost": 300
+        },
+        {
+            "ItemName": "테스트 무기",
+            "RequireLevel": 1,
+            "ItemType": "Weapon",
+            "ItemHp": 0,
+            "ItemMp": 0,
+            "ItemAttack": 50,
+            "ItemDefense": 0,
+            "ItemMagic": 20,
+            "ItemCost": 1000
+        }
+    ]
+}
