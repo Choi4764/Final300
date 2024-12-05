@@ -6,6 +6,7 @@ import { getGameSession } from '../../sessions/game.session.js';
 import { townSession } from '../../sessions/sessions.js';
 import sendResponsePacket from '../../utils/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
+import { CommandMap } from './commands/Command.map.js';
 
 export const ChatHandler = async ({ socket, payload }) => {
   const { playerId, chatMsg } = payload;
@@ -18,7 +19,15 @@ export const ChatHandler = async ({ socket, payload }) => {
     if (!gameSession) throw new Error('session not found');
 
     if (chatMsg[0] === '/') {//명령어 부분 추후 작성
-
+      const commands = CommandMap.get(command);
+      if(!commands){
+        const InvalidCommand = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
+          playerId: sender.playerId,
+          chatMsg: `[시스템] 명령어가 존재하지 않습니다`
+        });
+        socket.write(InvalidCommand);
+        return;
+      }
     }
     else {
       chatAll(sender, chatMsg);
