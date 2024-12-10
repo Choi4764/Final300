@@ -1,9 +1,17 @@
 import { InventoryItems, Shop, Character, Items, potion } from '../../db/model/model.js';
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import { handleError } from '../../utils/error/errorHandler.js';
+import { getAllUsers, getUserById, getUserByNickname } from '../../sessions/user.session.js';
+import { getGameSession } from '../../sessions/game.session.js';
+import { townSession } from '../../sessions/sessions.js';
+import sendResponsePacket from '../../utils/response/createResponse.js';
+import { PACKET_TYPE } from '../../constants/header.js';
 
 /**
  * 아이템 장착 핸들러
- * @param {Object} data - 클라이언트로부터 받은 요청 데이터
- * @returns {Object} - 처리 결과를 반환
+ * @param {Object} data - { playerId, itemId }
+ * @returns {Object}
  */
 export const EquipItemHandler = async (data) => {
     const { playerId, itemId } = data;
@@ -51,13 +59,13 @@ export const EquipItemHandler = async (data) => {
 
         const currentItemId = character[column];
 
-        // 4. 캐릭터 스탯 업데이트
+        // 이미 해당 부위에 무언가 장착되어 있다면 해당 스탯을 빼줌
         const updatedStats = {
-            hp: character.hp - (currentItemId ? ItemHp : 0) + (ItemHp || 0),
-            mp: character.mp - (currentItemId ? ItemMp : 0) + (ItemMp || 0),
-            atk: character.atk - (currentItemId ? ItemAttack : 0) + (ItemAttack || 0),
-            def: character.def - (currentItemId ? ItemDefense : 0) + (ItemDefense || 0),
-            magic: character.magic - (currentItemId ? ItemMagic : 0) + (ItemMagic || 0),
+            hp: character.hp - (currentItemId ? (await getItemStat(currentItemId, 'ItemHp')) : 0) + (ItemHp || 0),
+            mp: character.mp - (currentItemId ? (await getItemStat(currentItemId, 'ItemMp')) : 0) + (ItemMp || 0),
+            atk: character.atk - (currentItemId ? (await getItemStat(currentItemId, 'ItemAttack')) : 0) + (ItemAttack || 0),
+            def: character.def - (currentItemId ? (await getItemStat(currentItemId, 'ItemDefense')) : 0) + (ItemDefense || 0),
+            magic: character.magic - (currentItemId ? (await getItemStat(currentItemId, 'ItemMagic')) : 0) + (ItemMagic || 0),
         };
 
         // 5. 캐릭터 정보 업데이트
@@ -86,8 +94,8 @@ export const EquipItemHandler = async (data) => {
 
 /**
  * 아이템 해제 핸들러
- * @param {Object} data - 클라이언트로부터 받은 요청 데이터
- * @returns {Object} - 처리 결과를 반환
+ * @param {Object} data - { playerId, itemType }
+ * @returns {Object}
  */
 export const UnequipItemHandler = async (data) => {
     const { playerId, itemType } = data;
@@ -171,7 +179,63 @@ export const UnequipItemHandler = async (data) => {
     }
 };
 
+/**
+ * 명령어로 아이템 장착 요청 처리 (예: /itemEquip 1234)
+ * @param {number} playerId 
+ * @param {string} command - "/itemEquip 1234" 형태의 채팅 명령어
+ */
+export const handleItemEquipCommand = async (playerId, command) => {
+    const parts = command.trim().split(' '); // ['/itemEquip', '1234']
+    const cmd = parts[0]; // '/itemEquip'
+    const itemId = parts[1]; // '1234'
+
+    if (cmd !== '/itemEquip') {
+        return { success: false, message: '지원하지 않는 명령어입니다.' };
+    }
+
+    if (!itemId) {
+        return { success: false, message: '아이템 ID를 입력해주세요.' };
+    }
+
+    const result = await EquipItemHandler({ playerId, itemId });
+    return result;
+};
+
+/**
+ * 명령어로 아이템 해제 요청 처리 (예: /itemUnequip Weapon)
+ * @param {number} playerId
+ * @param {string} command - "/itemUnequip Weapon" 형태의 채팅 명령어
+ */
+export const handleItemUnequipCommand = async (playerId, command) => {
+    const parts = command.trim().split(' '); // ['/itemUnequip', 'Weapon']
+    const cmd = parts[0]; // '/itemUnequip'
+    const itemType = parts[1]; // 'Weapon', 'Head', 'Body', 'Hand', 'Leg' 등
+
+    if (cmd !== '/itemUnequip') {
+        return { success: false, message: '지원하지 않는 명령어입니다.' };
+    }
+
+    if (!itemType) {
+        return { success: false, message: '아이템 타입을 입력해주세요. (Head, Body, Hand, Leg, Weapon)' };
+    }
+
+    const result = await UnequipItemHandler({ playerId, itemType });
+    return result;
+};
+
+/**
+ * 현재 장착된 아이템의 특정 스탯 값을 반환하는 헬퍼 함수
+ * @param {number} itemId 
+ * @param {string} statColumn - 'ItemHp', 'ItemMp', 'ItemAttack', 'ItemDefense', 'ItemMagic'
+ */
+async function getItemStat(itemId, statColumn) {
+    const item = await Items.findOne({ where: { ItemId: itemId } });
+    return item ? item[statColumn] || 0 : 0;
+}
+
 export default {
     EquipItemHandler,
     UnequipItemHandler,
+    handleItemEquipCommand,
+    handleItemUnequipCommand,
 };
