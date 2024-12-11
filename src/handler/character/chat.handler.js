@@ -19,16 +19,20 @@ export const ChatHandler = async ({ socket, payload }) => {
     if (!gameSession) throw new Error('session not found');
 
     if (chatMsg[0] === '/') {//명령어 부분 추후 작성
-      const commands = CommandMap.get(command);
-      if(!commands){
+      const { CommandName, CommandTarget } = CommandDefine(chatMsg);
+
+      const CommandHandler = CommandMap.get(CommandType); 
+      if (!CommandHandler) {
         const InvalidCommand = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
           playerId: sender.playerId,
-          chatMsg: `[시스템] 명령어가 존재하지 않습니다`
+          chatMsg: `[시스템] 명령어가 존재하지 않습니다. /help로 명령어 목록을 확인하세요.`
         });
-        socket.write(InvalidCommand);
+        user.socket.write(InvalidCommand);
         return;
       }
+    CommandHandler(sender, context);
     }
+
     else {
       chatAll(sender, chatMsg);
     }
@@ -37,13 +41,13 @@ export const ChatHandler = async ({ socket, payload }) => {
   }
 };
 
-async function chatAll(sender, context) {
+async function chatAll(sender, message) {
   try {
     const allUsers = getAllUsers();
 
     const chatResponse = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
       playerId: sender.playerId,
-      chatMsg: `[전체] ${sender.nickname}: ${context}`
+      chatMsg: `[전체] ${sender.nickname}: ${message}`
     });
 
     allUsers.forEach((user) => {
@@ -53,4 +57,12 @@ async function chatAll(sender, context) {
 
   } catch (error) {
   }
+};
+
+const CommandDefine = (command) => {
+  const CommandFin = command.indexOf(' ');
+  const CommandName = CommandFin !== -1 ? command.substring(0, Space) : command;
+  const CommandTarget = CommandFin !== -1 ? command.substring(Space + 1) : '';
+
+  return { CommandName, CommandTarget };
 };
