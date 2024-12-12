@@ -21,7 +21,7 @@ export const ChatHandler = async ({ socket, payload }) => {
     if (chatMsg[0] === '/') {//명령어 부분 추후 작성
       const { CommandName, CommandTarget } = CommandDefine(chatMsg);
 
-      const CommandHandler = CommandMap.get(CommandType); 
+      const CommandHandler = CommandMap.get(CommandType);
       if (!CommandHandler) {
         const InvalidCommand = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
           playerId: sender.playerId,
@@ -30,7 +30,7 @@ export const ChatHandler = async ({ socket, payload }) => {
         user.socket.write(InvalidCommand);
         return;
       }
-    CommandHandler(sender, context);
+      CommandHandler(sender, context);
     }
 
     else {
