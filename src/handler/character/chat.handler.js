@@ -9,7 +9,7 @@ import { PACKET_TYPE } from '../../constants/header.js';
 import { CommandMap } from './commands/Command.map.js';
 
 export const ChatHandler = async ({ socket, payload }) => {
-  const { playerId, chatMsg } = payload;
+  const { chatMsg } = payload;
 
   try {
     const sender = await getUserBySocket(socket);
@@ -18,44 +18,31 @@ export const ChatHandler = async ({ socket, payload }) => {
     const gameSession = getGameSession(townSession);
     if (!gameSession) throw new Error('session not found');
 
-    if (chatMsg[0] === '/') {//명령어 부분 추후 작성
+    if (chatMsg[0] === '/') {//명령어 작성ing
       const { CommandName, CommandTarget } = CommandDefine(chatMsg);
 
       const CommandHandler = CommandMap.get(CommandType);
       if (!CommandHandler) {
         const InvalidCommand = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
-          playerId: sender.playerId,
           chatMsg: `[시스템] 명령어가 존재하지 않습니다. /help로 명령어 목록을 확인하세요.`
         });
         user.socket.write(InvalidCommand);
         return;
       }
-      CommandHandler(sender, context);
+      CommandHandler(chatMsg);
     }
 
     else {
-      chatAll(sender, chatMsg);
+      const chatResponse = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
+        chatMsg: `${chatMsg}`
+      });
+
+      townSession.users.forEach((user) => {
+        user.socket.write(chatResponse);
+      });
     }
   } catch (error) {
     handleError(socket, error);
-  }
-};
-
-async function chatAll(sender, message) {
-  try {
-    const allUsers = getAllUsers();
-
-    const chatResponse = sendResponsePacket(PACKET_TYPE.S_ChatResponse, {
-      playerId: sender.playerId,
-      chatMsg: `[전체] ${sender.nickname}: ${message}`
-    });
-
-    allUsers.forEach((user) => {
-      user.socket.write(chatResponse);
-    });
-
-
-  } catch (error) {
   }
 };
 
