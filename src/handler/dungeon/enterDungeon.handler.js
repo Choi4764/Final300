@@ -1,14 +1,17 @@
-import Monster from '../../classes/monster.class.js';
-import { addDungeon } from '../../session/dungeon.session.js';
+import Monster from '../../classes/models/monster.class.js';
+import { addDungeon } from '../../sessions/dungeon.session.js';
 import { gameSessions } from '../../sessions/sessions.js';
+import { getUserBySocket } from '../../sessions/user.session.js';
+import sendResponsePacket from '../../utils/response/createResponse.js';
 
 const enterDungeonHandler = async ({ socket, payload }) => {
   try {
     const { dungeonCode } = payload;
-    const user = await getUserBySocket(socket); // 현재 소켓에 연결되 유저를 불러옵니다.
-    const userPlayerInfo = await getPlayerInfo(socket); // 유저의 정보또한 불러옵니다.
+    console.log(dungeonCode);
 
-    const dungeon = addDungeon(user.name, dungeonCode);
+    const user = await getUserBySocket(socket); // 현재 소켓에 연결되 유저를 불러옵니다.
+    // console.log(user);
+    const dungeon = addDungeon(dungeonCode);
 
     const monsterStatus = [];
     //db에서 몬스터3마리를 랜덤하게 가지고 옵니다.
@@ -26,7 +29,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
       const monster = {
         monsterIdx: i,
-        monsterModel: monsterId,
+        monsterId: monsterId,
         monsterName: monsterName,
         monsterHp: monsterHp,
       };
@@ -45,8 +48,9 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
     const dungeonInfo = {
       dungeonCode: dungeonCode,
-      monsters: monsterStatus,
+      // monsters: monsterStatus,
     };
+    console.log(dungeonInfo);
     const playerStatus = {
       playerClass: user.class,
       playerLevel: user.level,
@@ -91,15 +95,15 @@ const enterDungeonHandler = async ({ socket, payload }) => {
       btns,
     };
 
-    const enterDungeonResponse = createResponse('response', 'S_EnterDungeonResponse', {
+    const enterDungeonResponse = sendResponsePacket(PACKET_TYPE.S_EnterDungeonResponse, {
       dungeonInfo,
       playerStatus,
       screenText,
       battleLog,
     });
-
+    console.log(dungeon);
     socket.write(enterDungeonResponse);
-    const despawnTownResponse = createResponse('response', 'S_Despawn', {
+    const despawnTownResponse = sendResponsePacket(PACKET_TYPE.S_DespawnNotification, {
       playerIds: [user.playerId],
     });
   } catch (err) {

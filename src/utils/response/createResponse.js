@@ -1,6 +1,5 @@
-import { PACKET_TYPE } from '../../constants/header.js';
 import { getProtoMessagesById } from '../../init/loadProtos.js';
-import { config } from '../../config/config.js'
+import { config } from '../../config/config.js';
 
 const sendResponsePacket = (packetId, data = null) => {
   const messageType = getProtoMessagesById(packetId);
@@ -14,21 +13,21 @@ const sendResponsePacket = (packetId, data = null) => {
   }
 
   // packetSize 계산(PacketSize(4byte) + PacketId(1byte) + PacketData)
-  const packetSize = config.packet.packetSizeLength + config.packet.packetIdLength + packetData.length;
+  const packetSize =
+    config.packet.packetSizeLength + config.packet.packetIdLength + packetData.length;
 
   // PacketSize 쓰기(빅 엔디안, PacketSize = 4byte)
   const packetSizeBuffer = Buffer.alloc(config.packet.packetSizeLength);
   packetSizeBuffer.writeUInt32BE(packetSize, 0);
 
   // PacketId 쓰기(1byte)
-  const pacektIdBuffer = Buffer.alloc(config.packet.packetIdLength);
-  pacektIdBuffer.writeUInt8(packetId, 0);
+  const packetIdBuffer = Buffer.alloc(config.packet.packetIdLength);
+  packetIdBuffer.writeUInt8(packetId, 0);
 
   // 패킷 합치기(PacketSize + PacketId + PacketData)
-  const responsePacketBuffer = Buffer.concat([packetSizeBuffer, pacektIdBuffer, packetData]);
+  const responsePacketBuffer = Buffer.concat([packetSizeBuffer, packetIdBuffer, packetData]);
 
   return responsePacketBuffer;
-
 };
 
 export default sendResponsePacket;

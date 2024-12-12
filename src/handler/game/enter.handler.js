@@ -1,11 +1,13 @@
-import { createUser, findUserNickname } from "../../db/user/user.db.js";
-import User from "../../classes/models/user.class.js";
-import { PACKET_TYPE } from "../../constants/header.js";
-import { getJobById } from "../../init/loadAssets.js";
-import { addUserAtTown, getAllUserExceptMyself } from "../../sessions/town.session.js";
-import { playerData } from "../../utils/packet/playerPacket.js";
-import sendResponsePacket from "../../utils/response/createResponse.js";
-import { spawnOtherPlayerHandler } from "./spawn.handler.js";
+import { createUser, findUserNickname } from '../../db/user/user.db.js';
+import User from '../../classes/models/user.class.js';
+import { PACKET_TYPE } from '../../constants/header.js';
+import { getJobById } from '../../init/loadAssets.js';
+import { addUserAtTown, getAllUserExceptMyself } from '../../sessions/town.session.js';
+import { playerData } from '../../utils/packet/playerPacket.js';
+import sendResponsePacket from '../../utils/response/createResponse.js';
+import { spawnOtherPlayerHandler } from './spawn.handler.js';
+import { userSessions } from '../../sessions/sessions.js';
+import { addUser } from '../../sessions/user.session.js';
 
 /*
 
@@ -21,23 +23,27 @@ message S_Enter {
 }
 
 */
-export const enterTownHandler = async ({socket, payload}) => {
+export const enterTownHandler = async ({ socket, payload }) => {
 
-  const {nickname, class: jobClass} = payload;
+  const { nickname, job: jobClass } = payload;
 
   const pickJob = getJobById(jobClass);
+  if (!pickJob) {
+    console.error(`존재하지 않는 직업입니다. ${jobClass}`);
+    return;
+  }
 
   let newPlayer;
   const existingPlayer = await findUserNickname(nickname);
   // 새 유저가 아니고 기존 유저인 경우 기존 정보 불러오기
-  if(existingPlayer){
+  if (existingPlayer) {
     newPlayer = existingPlayer;
-  }else{ // 기존유저가 아니고 새 유저인 경우 새로운 사용자 생성 및 DB에 저장.
+  } else { // 기존유저가 아니고 새 유저인 경우 새로운 사용자 생성 및 DB에 저장.
     await createUser(
-      null,
-      nickname,
-      jobClass,
-      1,
+      pickJob.playerId,//null,  // playerId
+      nickname, // nickname
+      pickJob.id, // job
+      1, // level
       pickJob.maxHp,
       pickJob.maxMp,
       pickJob.hp,
@@ -54,7 +60,7 @@ export const enterTownHandler = async ({socket, payload}) => {
 
   const user = new User(
     socket,
-    newPlayer.id,
+    newPlayer.playerId,
     nickname,
     // playerInfo
     newPlayer.maxHp,
@@ -85,24 +91,35 @@ export const enterTownHandler = async ({socket, payload}) => {
   user.stat.magic = newPlayer.magic;
   user.stat.speed = newPlayer.speed;
   user.stat.critical = newPlayer.critical;
-  user.stat.critical_attack = newPlayer.critical_attack; 
+  user.stat.critical_attack = newPlayer.critical_attack;
 
   await addUserAtTown(user);
 
+  //usersession에 유저가 없으면 사용자 추가
+  const userInSession = userSessions.find((users) => users.id === user.id);
+  if(!userInSession){
+    await addUser(user);
+  }
+
   const enterData = playerData(user);
 
-  const enterResponse = sendResponsePacket(PACKET_TYPE.S_Enter, {
+  const enterResponse = sendResponsePacket(PACKET_TYPE.S_EnterResponse, {
     player: enterData,
   });
+
+
   socket.write(enterResponse);
+  if (enterResponse) {
+    console.log(`!!send response!! ${enterResponse}`);
+  }
 
   const otherPlayers = await getAllUserExceptMyself(user.id);
 
   // 다른 플레이어가 있을때 새로운 플레이어에게 기존 플레이어들의 정보 전송
-  if(otherPlayers.length > 0){
+  if (otherPlayers.length > 0) {
     const otherPlayersData = otherPlayers.map((u) => playerData(u));
 
-    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_Spawn, {
+    const spawnResponse = sendResponsePacket(PACKET_TYPE.S_SpawnNotification, {
       players: otherPlayersData,
     });
     socket.write(spawnResponse);

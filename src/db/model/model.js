@@ -1,5 +1,5 @@
-import { Sequelize, DataTypes } from 'sequelize';
-import { config } from '../../src/config/config.js';
+import { Sequelize , DataTypes } from 'sequelize';
+import { config } from '../../config/config.js';
 
 // Sequelize 인스턴스 초기화
 const sequelize = new Sequelize(

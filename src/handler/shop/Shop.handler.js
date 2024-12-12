@@ -1,4 +1,4 @@
-import { InventoryItems, Shop, Character, Items } from '../../../DB/model/model.js'; // Sequelize 모델 로드
+import { InventoryItems, Shop, Character, Items } from '../../db/model/model.js'; // Sequelize 모델 로드
 
 /**
  * 아이템 구매 핸들러

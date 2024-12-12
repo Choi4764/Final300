@@ -1,6 +1,12 @@
+import Monster from './monster.class.js';
+
 class InstanceDungeon {
-  constructor(DungeonName, dungeonCode) {
+  constructor(DungeonCode, DungeonMonsterId, DungeonItemId, DungeonName, RequireLevel) {
+    this.DungeonCode = DungeonCode;
+    this.DungeonMonsterId = DungeonMonsterId;
+    this.DungeonItemId = DungeonItemId;
     this.DungeonName = DungeonName;
+    this.RequireLevel = RequireLevel;
     this.monsters = [];
   }
 

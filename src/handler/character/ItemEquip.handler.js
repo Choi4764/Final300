@@ -1,4 +1,4 @@
-import { InventoryItems, Shop, Character, Items } from '../../../DB/model/model.js';
+import { InventoryItems, Shop, Character, Items } from '../../db/model/model.js';
 
 
 /**
