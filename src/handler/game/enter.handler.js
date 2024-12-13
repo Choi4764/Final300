@@ -60,7 +60,7 @@ export const enterTownHandler = async ({ socket, payload }) => {
 
   const user = new User(
     socket,
-    newPlayer.id,
+    newPlayer.playerId,
     nickname,
     // playerInfo
     newPlayer.maxHp,

@@ -2,9 +2,9 @@ import Stat from "./stat.class.js";
 import Position from "./position.class.js";
 
 class User{
-    constructor(socket, id, nickname, maxHp, maxMp, atk, def, magic, speed, critical, critical_attack){
+    constructor(socket, playerId, nickname, maxHp, maxMp, atk, def, magic, speed, critical, critical_attack){
         this.socket = socket;
-        this.id = id;
+        this.playerId = playerId;
         this.nickname = nickname;
 
         this.playerInfo = {};
