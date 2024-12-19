@@ -17,7 +17,7 @@ export const moveHandler = async ({ socket, payload }) => {
 
         const gameSession = getGameSession(townSession);
         if (!gameSession) {
-            throw new Error('session not fouond');
+            throw new Error('session not found');
         }
 
         const user = await getUserBySocket(socket);
